@@ -1,4 +1,9 @@
-import { createApp } from 'vue';
-import Application from "./components/Application";
+import {createApp} from 'vue'
+import Application from "./Application"
+import router from "./router/router";
+import {VueSpinner} from "vue3-spinners";
 
-createApp(Application).mount("#app")
+const app = createApp(Application)
+app.use(router)
+app.use(VueSpinner)
+app.mount("#app")

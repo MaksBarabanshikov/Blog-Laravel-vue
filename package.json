@@ -24,6 +24,11 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
-        "autoprefixer": "10.4.5"
+        "autoprefixer": "10.4.5",
+        "vee-validate": "^4.5.11",
+        "vue-axios": "^3.4.1",
+        "vue-router": "^4.0.15",
+        "vue3-spinners": "^1.2.1",
+        "vuex": "^4.0.2"
     }
 }

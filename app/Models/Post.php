@@ -13,10 +13,11 @@ class Post extends Model
         "title",
         "description",
         "preview",
-        "thumbnail"
+        "thumbnail",
     ];
 
-    public function comments() {
-        $this->hasMany(Commnet::class)->orderBy("created_at");
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comment::class)->orderBy("created_at");
     }
 }

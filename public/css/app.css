@@ -10271,3 +10271,7 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+html, body {
+  margin-right: calc(-1 * (100vw - 100%));
+  text-rendering: optimizeLegibility;
+}

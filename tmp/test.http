@@ -1,0 +1,2 @@
+GET http://blog.test/api/auth//user/1
+Accept: application/json
