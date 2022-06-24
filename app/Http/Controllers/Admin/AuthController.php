@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthController extends Controller
 {
-
     public function login(Request $request): \Illuminate\Http\JsonResponse
     {
         $data = $request->validate([
@@ -15,11 +16,18 @@ class AuthController extends Controller
             "password" => ["required"]
         ]);
 
-
-
-        if (auth('admin')->attempt($data)) {
-           return response() -> json(["message" => "Успешно"]);
+        if (!auth('admin')->attempt($data)) {
+            throw new HttpException(404,'Пользователь не найден' );
         }
-        return response() -> json(["message" => "Пользователь не найден"],400);
+
+        $user = $request->user('admin');
+        $token = $user -> createToken('adminToken');
+        return response()->json(['token' => $token]);
+    }
+
+    public function logout(Request $request): \Illuminate\Http\Response
+    {
+        $request->user('admin')->currentAccessToken()->delete();
+        return response()->noContent();
     }
 }

@@ -40,15 +40,15 @@
             </div>
             <div class="form-floating">
                 <Field
-                    name="passwordConfirmation"
+                    name="password_confirmation"
                     type="password"
                     class="form-control"
-                    id="passwordConfirmation"
+                    id="password_confirmation"
                     placeholder="Password"
                     rules="required|confirmed:@password"
                 />
                 <ErrorMessage class="error-message text-danger position-absolute" name="passwordConfirmation"/>
-                <label for="passwordConfirmation">Подтвердите пароль</label>
+                <label for="password_confirmation">Подтвердите пароль</label>
             </div>
             <button
                 class="form-button w-100 btn btn-lg btn-success mb-2 position-relative"
@@ -68,7 +68,7 @@
         </Form>
     </div>
     <div v-if="message && visible" class="form-alert alert alert-danger position-absolute m-0" role="alert">
-        {{message}}
+        {{ message }}
     </div>
 </template>
 
@@ -127,16 +127,25 @@ export default {
     methods: {
         register(data) {
             this.loading = true
-            axios.post("/api/auth/register", {name: data.name, email: data.email, password: data.password})
-                .then(res => {
-                    localStorage.access_token = res.data.token
-                    this.loading = false
-                    this.$router.push({name: "all-blogs"})
-                }).catch(e => {
-                this.visible = true
-                this.loading = false
-                setTimeout(() => this.visible = false, 5000)
-                return this.message = e.response.data.message
+            console.log(data)
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.post("/register", {
+                    name: data.name,
+                    email: data.email,
+                    password: data.password,
+                    password_confirmation: data.password_confirmation
+                })
+                    .then(res => {
+                        localStorage.setItem('x_xsrf_token', JSON.stringify(res.config.headers['X-XSRF-TOKEN']))
+                        this.loading = false
+                        this.$router.push({name: "blog"})
+                    })
+                    .catch(e => {
+                        console.log(e.response)
+                        this.visible = true
+                        this.loading = false
+                        setTimeout(() => this.visible = false, 5000)
+                    })
             })
             console.log(data.name, data.email)
         },

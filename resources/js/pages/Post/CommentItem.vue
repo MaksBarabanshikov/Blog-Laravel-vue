@@ -30,10 +30,7 @@ export default {
             type: String
         }
     },
-    name: "CommentItems",
-    mounted() {
-        console.log(name)
-    }
+    name: "CommentItems"
 }
 </script>
 

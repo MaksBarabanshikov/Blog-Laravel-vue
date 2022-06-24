@@ -1,7 +1,5 @@
 <template>
-    <footer v-if="$route.path !== '/' && $route.path !== '/admin/panel' "
-            class="footer border-top bg-dark"
-    >
+    <footer class="footer border-top bg-dark">
         <div class="container">
             <div class="d-flex flex-wrap justify-content-between align-items-center py-3 mt-4">
                 <div class="footer__logo col-md-4 d-flex align-items-center">

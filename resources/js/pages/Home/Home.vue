@@ -13,6 +13,7 @@ import BigBlog from "./BigBlog";
 import RedirectAllBlogs from "./RedirectAllBlogs";
 import Loader from "../../components/Loader";
 import axios from "axios";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "Home",
@@ -22,22 +23,6 @@ export default {
         BigBlog,
         Blogs,
     },
-    data: () => ({
-        loading: true,
-        posts: []
-    }),
-    mounted() {
-        this.loadPosts()
-    },
-    methods: {
-        loadPosts() {
-            axios.get('/api/blog/posts')
-                .then(res => {
-                    this.posts = res.data
-                    this.loading = false
-                })
-        }
-    }
 }
 </script>
 

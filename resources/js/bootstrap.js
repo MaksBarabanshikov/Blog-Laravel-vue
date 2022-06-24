@@ -1,3 +1,4 @@
+const router = require("./router/router");
 window._ = require('lodash');
 
 try {
@@ -13,6 +14,20 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.withCredentials = true;
+
+window.axios.interceptors.response.use({},err => {
+    console.log(err.response)
+    if (err.response.status === 401 || err.response.status === 419) {
+        const token = localStorage.getItem('x_xsrf_token')
+        const AdminToken = localStorage.getItem('ADMIN_x_xsrf_token')
+        if (token || AdminToken) {
+            localStorage.removeItem('x_xsrf_token')
+            localStorage.removeItem('ADMIN_x_xsrf_token')
+        }
+        router.push({name: 'auth'})
+    }
+})
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

@@ -84,17 +84,20 @@ export default {
         },
         login(data) {
             this.loading = true
-            axios.post('/api/auth/login', {email: data.email, password: data.password})
-                .then(res => {
-                    localStorage.access_token = res.data.access_token
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.post('/login', {email: data.email, password: data.password})
+                    .then(res => {
+                        localStorage.setItem('x_xsrf_token', JSON.stringify(res.config.headers['X-XSRF-TOKEN']))
+                        this.loading = false
+                        this.$router.push({name: "all-blogs"})
+                    }).catch(e => {
+                    this.visible = true
                     this.loading = false
-                    this.$router.push({name: "all-blogs"})
-                }).catch(e => {
-                this.visible = true
-                this.loading = false
-                setTimeout(() => this.visible = false, 5000)
-                return this.message = e.response.data.message
-            })
+                    setTimeout(() => this.visible = false, 5000)
+                    return this.message = e.response.data.message
+                })
+            });
+
         }
     }
 }

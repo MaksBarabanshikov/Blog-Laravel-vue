@@ -1,12 +1,14 @@
 <template>
-    <Loader v-if="loading"/>
-    <div v-else-if="!loading && !not_found">
+    <Loader v-if="getLoading"/>
+    <div v-else-if="!getLoading && !getNotFound">
         <div>
             <div class="post-body mb-5 pb-5">
-                <h1 class="d-flex align-items-center">{{ post.title }}<span
-                    class="ms-4 p-2 fs-6 d-inline-block bg-success text-white rounded-pill">{{ date }}</span></h1>
+                <h1 class="d-flex align-items-center">{{ getPostData.title }}<span
+                    class="ms-4 p-2 fs-6 d-inline-block bg-success text-white rounded-pill">{{
+                        new Date(getPostData.created_at).toLocaleString()
+                    }}</span></h1>
                 <p>
-                    {{ post.description }}
+                    {{ getPostData.description }}
                 </p>
             </div>
 
@@ -24,10 +26,10 @@
                     Оставить комментарий
                 </button>
             </Form>
-            <Comments :comments="comments" :users="users"/>
+            <Comments :comments="getCommentsData" :users="getUsersData"/>
         </div>
     </div>
-    <div v-if="not_found"
+    <div v-if="getNotFound"
          class="alert alert-danger"
          role="alert"
     >
@@ -36,10 +38,11 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
 import Loader from "../../components/Loader";
-import api from "../../api/api";
 import Comments from "./Comments";
 import {Field, Form, ErrorMessage, defineRule} from "vee-validate";
+import api from "../../api/api";
 
 defineRule("required", value => {
     if (!value) {
@@ -55,42 +58,18 @@ export default {
         Field,
         Form,
         ErrorMessage,
-        Comments
-    },
-    data: () => ({
-        loading: true,
-        post: [],
-        comments: [],
-        users: [],
-        date: null,
-        not_found: false
-    }),
-    mounted() {
-        this.loadPost(this.$route.params.id)
+        Comments,
     },
     methods: {
-        loadPost(id) {
-            api.get('/api/auth/blog/posts/' + id)
-                .then(res => {
-                    this.post = res.data.post
-                    this.comments = res.data.comments
-                    this.users = res.data.user
-                    console.log(this.users)
-                    this.date = new Date(res.data.created_at).toLocaleString()
-                    this.loading = false
-                })
-                .catch(e => {
-                    console.log(e)
-                    this.not_found = true
-                    this.loading = false
-                })
-        },
+        ...mapActions([
+            'loadPostData'
+        ]),
         onSubmit(values) {
             this.sendComment(values.text)
         },
 
-        sendComment(data) {
-            api.post(`/api/auth/posts/comment/${this.$route.params.id}`, {text: data})
+        async sendComment(data) {
+            await axios.post(`/api/posts/comment/${this.$route.params.id}`, {text: data})
                 .then(res => {
                     console.log(res);
                 })
@@ -98,7 +77,21 @@ export default {
                     console.log(e);
                 })
         }
-    }
+
+    },
+    computed: {
+        ...mapGetters([
+            'getPostData',
+            'getCommentsData',
+            'getUsersData',
+            'getLoading',
+            'getNotFound'
+
+        ])
+    },
+    mounted() {
+        this.loadPostData()
+    },
 }
 </script>
 

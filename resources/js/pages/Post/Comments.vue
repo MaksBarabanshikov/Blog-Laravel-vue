@@ -30,17 +30,6 @@ export default {
     name: "Comments",
     components: {
         CommentItem
-    },
-    data: () => ({
-
-    }),
-
-    mounted() {
-        console.log(this.users[0][0].name)
-    },
-
-    methods: {
-
     }
 }
 </script>

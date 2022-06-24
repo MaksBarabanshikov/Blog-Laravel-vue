@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -10,11 +12,12 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
-        //
+        $posts = Post::all();
+        return response()->json(["posts" => $posts], 200);
     }
 
     /**
@@ -75,11 +78,12 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        //
+        Post::destroy($id);
+        return response()->noContent();
     }
 }

@@ -1,11 +1,11 @@
 <template>
-    <main v-if="loading">
+    <main v-if="getLoading">
         <Loader/>
     </main>
     <main v-else class="container">
         <div class="row mb-5 g-3">
             <BlogCard
-                v-for="post in posts"
+                v-for="post in allPosts"
                 :id="post.id"
                 :thumbnail="post.thumbnail"
                 :title="post.title"
@@ -19,30 +19,25 @@
 <script>
 import Loader from "../../components/Loader";
 import BlogCard from "../../components/BlogCard";
-import api from "../../api/api";
-
+import {mapGetters, mapActions} from 'vuex'
 export default {
     name: "AllBlogs",
     components: {
         BlogCard,
         Loader
     },
-    data: () => ({
-        loading: true,
-        posts: [],
-    }),
+    methods: mapActions(['loadPosts']),
+    computed: {
+        ...mapGetters([
+            'allPosts',
+            'getLoading'
+        ])
+    },
     mounted() {
         this.loadPosts()
     },
-    methods: {
-        loadPosts() {
-            api.get('/api/auth/blog/posts').then(res => {
-                this.posts = res.data
-                this.loading = false
-            })
-        },
-    }
 }
+
 </script>
 
 <style scoped>

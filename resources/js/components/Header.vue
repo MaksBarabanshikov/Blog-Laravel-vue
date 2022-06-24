@@ -1,6 +1,5 @@
 <template>
-    <header v-if="$route.path !== '/' && $route.path !== '/admin/panel' "
-            class="py-3 mb-4 border-bottom px-3 sticky-top bg-white">
+    <header class="py-3 mb-4 border-bottom px-3 sticky-top bg-white">
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between">
                 <router-link to="/home"
@@ -17,7 +16,7 @@
                 </ul>
                 <div class="col-md-3 d-flex justify-content-end">
                     <div
-                        v-if="!accessToken"
+                        v-if="!token"
                         class="d-flex align-items-center"
                     >
                         <button
@@ -36,7 +35,7 @@
                         </button>
                     </div>
                     <div
-                        v-if="accessToken"
+                        v-if="token"
                         class="d-flex align-items-center"
                     >
                         <h5 class="mb-0 ">
@@ -52,50 +51,51 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </header>
 </template>
 
 <script>
 
-import api from "../api/api";
+import axios from "../utils/axios";
 
 export default {
     name: "Header",
     data: () => ({
-        accessToken: null,
+        token: null,
         name: null
     }),
     mounted() {
-        this.getAccessToken()
+        this.getToken()
         this.getName()
+
     },
     updated() {
-        this.getAccessToken()
+        this.getToken()
         this.getName()
     },
     methods: {
-        getAccessToken() {
-            this.accessToken = localStorage.getItem('access_token')
+        getToken() {
+            this.token = localStorage.getItem('x_xsrf_token')
         },
 
         logout() {
-            api.post('/api/auth/logout')
+            axios.post('/logout')
                 .then(res => {
-                    localStorage.removeItem('access_token')
+                    localStorage.removeItem('x_xsrf_token')
                     this.$router.push({name: 'auth'})
                 })
         },
 
         getName() {
-            api.post('/api/auth/me')
-                .then(res => {
-                    this.name = res.data.name
-                })
-                .catch(e => {
-                    console.log(e)
-                })
+            if (localStorage.getItem('x_xsrf_token')) {
+                axios.get('/api/user')
+                    .then(res => {
+                        this.name = res.data.name
+                    })
+                    .catch(e => {
+                    })
+            }
         }
     }
 }

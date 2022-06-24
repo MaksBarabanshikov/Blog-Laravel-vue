@@ -2,7 +2,6 @@
     <div class="form-signin w-100 m-auto">
         <Form method="post" @submit="onSubmit">
             <h1 class="h3 mb-3 fw-normal">Admin Авторизация</h1>
-            <Field type="hidden" name="_token" :value="csrf"/>
             <div class="form-floating">
                 <Field rules="required|email" name="email" type="email" class="form-control" id="floatingInput"
                        placeholder="name@example.com"/>
@@ -72,7 +71,6 @@ export default {
         loading: false,
         message: null,
         visible: false,
-        csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     }),
     methods: {
         onSubmit(values) {
@@ -80,14 +78,18 @@ export default {
         },
         login(data) {
             this.loading = true
-            axios.post("/admin/login_process",{email: data.email, password: data.password}).then(res => {
-                this.loading = false
-                this.$router.push({name: "AdminPanel"})
-            }).catch(e => {
-                this.visible = true
-                this.loading = false
-                setTimeout(() => this.visible = false, 5000)
-                return this.message = e.response.data.message
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.post("/admin/login",{email: data.email, password: data.password}).then(res => {
+                    localStorage.setItem('ADMIN_x_xsrf_token', JSON.stringify(res.config.headers['X-XSRF-TOKEN']))
+                    this.loading = false
+                    console.log(res)
+                    this.$router.push({name: "AdminPanel"})
+                }).catch(e => {
+                    this.visible = true
+                    this.loading = false
+                    setTimeout(() => this.visible = false, 5000)
+                    return this.message = e.response.data.message
+                })
             })
         }
     }
