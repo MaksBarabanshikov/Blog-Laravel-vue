@@ -3,20 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdminAuthFormRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthController extends Controller
 {
-    public function login(Request $request): \Illuminate\Http\JsonResponse
+    public function login(AdminAuthFormRequest $request,): \Illuminate\Http\JsonResponse
     {
-        $data = $request->validate([
-            "email" => ["required", "email", "string"],
-            "password" => ["required"]
-        ]);
 
-        if (!auth('admin')->attempt($data)) {
+        if (!auth('admin')->attempt($request -> validated())) {
             throw new HttpException(404,'Пользователь не найден' );
         }
 

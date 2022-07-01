@@ -11,6 +11,11 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.webpackConfig({
+    devtool: 'eval-source-map'
+});
+
 mix.js('resources/js/app.js', 'public/js')
     .vue()
+    .sourceMaps()
     .sass('resources/sass/app.scss', 'public/css');

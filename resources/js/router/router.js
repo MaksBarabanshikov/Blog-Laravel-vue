@@ -12,8 +12,10 @@ import AdminPostLayout from "../pages/Admin/panel/Layout/AdminPostLayout";
 import AdminUserLayout from "../pages/Admin/panel/Layout/AdminUserLayout";
 import AdminStatisticsLayout from "../pages/Admin/panel/Layout/AdminStatisticsLayout";
 import MainLayout from "../pages/layout/MainLayout";
-import AddPost from "../pages/Admin/panel/AddPost";
-import AdminPosts from "../pages/Admin/panel/AdminPosts";
+import AddPost from "../pages/Admin/panel/Posts/AddPost";
+import AdminPosts from "../pages/Admin/panel/Posts/AdminPosts";
+import EditPost from "../pages/Admin/panel/Posts/EditPost";
+import ViewPost from "../pages/Admin/panel/Posts/ViewPost";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -84,6 +86,16 @@ const router = createRouter({
                             path: 'add',
                             name: 'AddPost',
                             component: AddPost
+                        },
+                        {
+                            path: 'edit/:id',
+                            name: 'EditPost',
+                            component: EditPost
+                        },
+                        {
+                            path: 'view/:id',
+                            name: 'ViewPost',
+                            component: ViewPost
                         }
                     ]
                 },

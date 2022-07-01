@@ -69,7 +69,7 @@
 
 <script>
 import axios from "axios";
-import AdminPosts from "../AdminPosts";
+import AdminPosts from "../Posts/AdminPosts";
 
 export default {
     name: "AdminPanel",

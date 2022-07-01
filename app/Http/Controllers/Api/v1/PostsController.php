@@ -71,15 +71,9 @@ class PostsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id): \Illuminate\Http\JsonResponse
     {
         $post = Post::find($id);
-
-        $comments = $post -> comments() -> get();
-
-        $user = $comments->map(function ($comment) {
-            return $comment -> user() -> get("name");
-        });
 
         if (!$post) {
             return response()->json([
@@ -87,6 +81,12 @@ class PostsController extends Controller
                 "message" => "Post not found"
             ],404);
         }
+
+        $comments = $post -> comments() -> get();
+
+        $user = $comments->map(function ($comment) {
+            return $comment -> user() -> get("name");
+        });
 
         return response()->json([
             "post" => $post,

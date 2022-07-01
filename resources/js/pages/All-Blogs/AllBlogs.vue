@@ -26,7 +26,7 @@ export default {
         BlogCard,
         Loader
     },
-    methods: mapActions(['loadPosts']),
+    methods: mapActions(['GET_POSTS_USER']),
     computed: {
         ...mapGetters([
             'allPosts',
@@ -34,7 +34,7 @@ export default {
         ])
     },
     mounted() {
-        this.loadPosts()
+        this.GET_POSTS_USER()
     },
 }
 

@@ -1,8 +1,8 @@
 <template>
-    <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+    <ckeditor @input="inputListener" :editor="editor" v-model="editorData" :config="editorConfig"/>
     <div class="mt-4">
         <button class="btn btn-success me-3"
-                @click="displayEditorResult()"
+                @click="sendEditorData()"
         >
             Результат
         </button>
@@ -36,12 +36,22 @@ export default {
         };
     },
     mounted(){
-
+        if (this.content) {
+            this.editorData = this.content
+        }
         console.log('Component mounted.')
     },
     methods: {
         emptyEditor() {
             this.editorData = '';
+        },
+
+        inputListener() {
+            return this.$emit('inputListener', this.editorData)
+        },
+
+        sendEditorData() {
+          return this.$emit('editorData', this.editorData)
         },
 
         displayEditorResult(){
@@ -54,7 +64,12 @@ export default {
                 return new UploadAdapter( loader );
             };
         },
-    }
+    },
+    // watch: {
+    //     editorData() {
+    //         this.editorData.$emit('changeEditor')
+    //     }
+    // }
 }
 </script>
 

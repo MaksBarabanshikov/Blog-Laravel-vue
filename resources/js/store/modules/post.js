@@ -1,7 +1,7 @@
 import axios from "../../utils/axios";
 const modulePost = {
     actions: {
-        async loadPosts(ctx) {
+        GET_POSTS_USER: async ctx => {
             let posts
             await axios.get('/api/blog/posts')
                 .then(res => {
@@ -14,24 +14,16 @@ const modulePost = {
         }
     },
     mutations: {
-        updatePosts(state, posts) {
-            state.posts = posts
-        },
-        updateLoading(state, loading) {
-            state.loading = loading
-        }
+        updatePosts: (state, posts) => state.posts = posts,
+        updateLoading: (state, loading) => state.loading = loading
     },
     state: {
         posts: [],
         loading: true
     },
     getters: {
-        allPosts(state) {
-            return state.posts
-        },
-        getLoading(state) {
-          return state.loading
-        }
+        allPosts: state => state.posts,
+        getLoading: state => state.loading
     }
 }
 

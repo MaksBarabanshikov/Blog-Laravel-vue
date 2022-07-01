@@ -21,10 +21,10 @@ import CommentItem from "./CommentItem";
 export default {
     props: {
         comments: {
-            type: Array,
+            type: Object,
         },
         users: {
-            type: Array
+            type: Object
         }
     },
     name: "Comments",

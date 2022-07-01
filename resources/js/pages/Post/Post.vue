@@ -3,10 +3,14 @@
     <div v-else-if="!getLoading && !getNotFound">
         <div>
             <div class="post-body mb-5 pb-5">
-                <h1 class="d-flex align-items-center">{{ getPostData.title }}<span
-                    class="ms-4 p-2 fs-6 d-inline-block bg-success text-white rounded-pill">{{
+                <h1 class="d-flex align-items-center">{{ getPostData.title }}
+                    <span
+                    class="ms-4 p-2 fs-6 d-inline-block bg-success text-white rounded-pill">
+                    {{
                         new Date(getPostData.created_at).toLocaleString()
-                    }}</span></h1>
+                    }}
+                </span>
+                </h1>
                 <p>
                     {{ getPostData.description }}
                 </p>
@@ -42,7 +46,7 @@ import {mapActions, mapGetters} from "vuex";
 import Loader from "../../components/Loader";
 import Comments from "./Comments";
 import {Field, Form, ErrorMessage, defineRule} from "vee-validate";
-import api from "../../api/api";
+import axios from "../../utils/axios"
 
 defineRule("required", value => {
     if (!value) {
@@ -65,6 +69,7 @@ export default {
             'loadPostData'
         ]),
         onSubmit(values) {
+            console.log(values)
             this.sendComment(values.text)
         },
 

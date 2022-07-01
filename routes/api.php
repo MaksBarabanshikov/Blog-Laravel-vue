@@ -18,7 +18,7 @@ use App\Http\Controllers\Api\v1\PostsController;
 Route::prefix('blog')->group(function () {
     Route::resource('posts', PostsController::class);
 });
-Route::group(['middleware' => ['auth:sanctum']], function () {
+Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });

@@ -5,16 +5,16 @@
     </div>
     <section>
         <div class="row g-4">
-            <AdminUserEl/>
+            <AdminUsers/>
         </div>
     </section>
 </template>
 
 <script>
-import AdminUserEl from "../AdminUserEl";
+import AdminUsers from "../Users/AdminUsers";
 export default {
     name: "AdminUserLayout",
-    components: {AdminUserEl}
+    components: {AdminUsers}
 }
 </script>
 

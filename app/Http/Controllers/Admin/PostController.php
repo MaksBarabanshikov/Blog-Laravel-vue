@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\PostFormRequest;
 use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
@@ -17,13 +21,25 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        return response()->json(["posts" => $posts], 200);
+
+        $comments = $posts->map(function ($post) {
+            return $post->comments()->get();
+        });
+
+        $data = [
+            "posts" => $posts,
+            "comments" => $comments,
+        ];
+
+        return response()->json(
+            $data
+            , 200);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -33,30 +49,60 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(PostFormRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        if ($request -> has('thumbnail')) {
+            $thumbnail = $request->get('thumbnail');
+            $fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($thumbnail, 0, strpos($thumbnail, ';')))[1])[1];
+            Image::make($thumbnail)->save(public_path('/storage/posts/').$fileName);
+            $data['thumbnail'] = '/storage/posts/'. $fileName;
+        }
+
+        Post::create($data);
+
+        return response() -> json(['message' => 'Успешно'],201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
-        //
+        $post = Post::find($id);
+
+        if (!$post) {
+            return response()->json([
+                "status" => false,
+                "message" => "Post not found"
+            ], 404);
+        }
+
+        $comments = $post->comments()->get();
+
+        $user = $comments->map(function ($comment) {
+            return $comment->user()->get("name");
+        });
+
+        return response()->json([
+            "post" => $post,
+            "comments" => $comments,
+            "user" => $user
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function edit($id)
     {
@@ -66,22 +112,36 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(PostFormRequest $request, int $id): JsonResponse
     {
-        //
+        $post = Post::find($id);
+
+        $data = $request->validated();
+
+        if ($request -> has('thumbnail')) {
+            $thumbnail = $request->get('thumbnail');
+            $fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($thumbnail, 0, strpos($thumbnail, ';')))[1])[1];
+            Image::make($thumbnail)->save(public_path('/storage/posts/').$fileName);
+            $data['thumbnail'] = '/storage/posts/'. $fileName;
+        }
+
+        $post -> update($data);
+
+        return response() -> json(['message' => 'Успешно'], 200);
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
         Post::destroy($id);
         return response()->noContent();
