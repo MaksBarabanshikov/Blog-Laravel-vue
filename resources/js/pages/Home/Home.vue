@@ -2,7 +2,6 @@
     <main>
         <BigBlog/>
         <Blogs/>
-        <RedirectAllBlogs/>
     </main>
 </template>
 
@@ -12,8 +11,6 @@ import Blogs from "./Blogs.vue"
 import BigBlog from "./BigBlog";
 import RedirectAllBlogs from "./RedirectAllBlogs";
 import Loader from "../../components/Loader";
-import axios from "axios";
-import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "Home",

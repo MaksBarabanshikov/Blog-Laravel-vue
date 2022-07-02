@@ -10,7 +10,7 @@
                     </span>
                 </h1>
                 <div class="text-center my-4">
-                    <img :src="currentPost.thumbnail" alt="Ошибка">
+                    <img :src="currentPost.thumbnail" alt="Изображение">
                 </div>
                 <div v-html="currentPost.description"/>
             </div>

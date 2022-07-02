@@ -3,17 +3,16 @@
     <div v-else-if="!getLoading && !getNotFound">
         <div>
             <div class="post-body mb-5 pb-5">
-                <h1 class="d-flex align-items-center">{{ getPostData.title }}
-                    <span
-                    class="ms-4 p-2 fs-6 d-inline-block bg-success text-white rounded-pill">
-                    {{
-                        new Date(getPostData.created_at).toLocaleString()
-                    }}
-                </span>
+                <h1 class="d-flex align-items-center">
+                    {{ getPostData.title }}
+                    <span class="ms-4 p-2 fs-6 d-inline-block bg-success text-white rounded-pill">
+                        {{ new Date(getPostData.created_at).toLocaleString() }}
+                    </span>
                 </h1>
-                <p>
-                    {{ getPostData.description }}
-                </p>
+                <div class="text-center my-4">
+                    <img :src="getPostData.thumbnail" alt="Изображение">
+                </div>
+                <div v-html="getPostData.description"/>
             </div>
 
             <Form class="mt-5" @submit="onSubmit">
@@ -30,7 +29,8 @@
                     Оставить комментарий
                 </button>
             </Form>
-            <Comments :comments="getCommentsData" :users="getUsersData"/>
+            <Comments v-if="getCommentsData.length" :comments="getCommentsData" :users="getUsersData"/>
+            <h2 v-else-if="!getCommentsData.length" class="my-5 text-info">Комментарий нет</h2>
         </div>
     </div>
     <div v-if="getNotFound"
@@ -104,4 +104,10 @@ export default {
 h1 span {
     font-size: 14px;
 }
+img {
+    margin: auto;
+    max-width: 100%;
+    max-height: 400px;
+}
+
 </style>

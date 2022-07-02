@@ -54,4 +54,9 @@ export default {
 * {
     text-overflow: ellipsis;
 }
+
+img {
+    max-height: 200px;
+    width: 100%;
+}
 </style>
