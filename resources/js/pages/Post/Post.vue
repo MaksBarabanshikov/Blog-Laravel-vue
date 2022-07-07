@@ -77,6 +77,7 @@ export default {
             await axios.post(`/api/posts/comment/${this.$route.params.id}`, {text: data})
                 .then(res => {
                     console.log(res);
+                    // todo добавить комментарий в store, чтобы он показывался автоматически после добавления
                 })
                 .catch(e => {
                     console.log(e);
