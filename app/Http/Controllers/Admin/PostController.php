@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PostFormRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
@@ -27,7 +30,7 @@ class PostController extends Controller
         });
 
         $data = [
-            "posts" => $posts,
+            "posts"    => $posts,
             "comments" => $comments,
         ];
 
@@ -49,29 +52,31 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return JsonResponse
      */
-    public function store(PostFormRequest $request)
+    public function store(PostFormRequest $request): JsonResource
     {
         $data = $request->validated();
 
-        if ($request -> has('thumbnail')) {
+        if ($request->has('thumbnail')) {
             $thumbnail = $request->get('thumbnail');
-            $fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($thumbnail, 0, strpos($thumbnail, ';')))[1])[1];
-            Image::make($thumbnail)->save(public_path('/storage/posts/').$fileName);
-            $data['thumbnail'] = '/storage/posts/'. $fileName;
+            $fileName  = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/',
+                    explode(':', substr($thumbnail, 0, strpos($thumbnail, ';')))[1])[1];
+
+            Image::make($thumbnail)->save(public_path('/storage/posts/') . $fileName);
+            $data['thumbnail'] = '/storage/posts/' . $fileName;
         }
 
-        Post::create($data);
+        $post = Post::create($data);
 
-        return response() -> json(['message' => 'Успешно'],201);
+        return PostResource::make($post);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return JsonResponse
      */
     public function show(int $id): JsonResponse
@@ -80,8 +85,8 @@ class PostController extends Controller
 
         if (!$post) {
             return response()->json([
-                "status" => false,
-                "message" => "Post not found"
+                "status"  => false,
+                "message" => "Post not found",
             ], 404);
         }
 
@@ -92,16 +97,16 @@ class PostController extends Controller
         });
 
         return response()->json([
-            "post" => $post,
+            "post"     => $post,
             "comments" => $comments,
-            "user" => $user
+            "user"     => $user,
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return Response
      */
     public function edit($id)
@@ -112,8 +117,8 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return JsonResponse
      */
     public function update(PostFormRequest $request, int $id): JsonResponse
@@ -122,23 +127,24 @@ class PostController extends Controller
 
         $data = $request->validated();
 
-        if ($request -> has('thumbnail')) {
+        if ($request->has('thumbnail')) {
             $thumbnail = $request->get('thumbnail');
-            $fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($thumbnail, 0, strpos($thumbnail, ';')))[1])[1];
-            Image::make($thumbnail)->save(public_path('/storage/posts/').$fileName);
-            $data['thumbnail'] = '/storage/posts/'. $fileName;
+            $fileName  = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/',
+                    explode(':', substr($thumbnail, 0, strpos($thumbnail, ';')))[1])[1];
+            Image::make($thumbnail)->save(public_path('/storage/posts/') . $fileName);
+            $data['thumbnail'] = '/storage/posts/' . $fileName;
         }
 
-        $post -> update($data);
+        $post->update($data);
 
-        return response() -> json(['message' => 'Успешно'], 200);
+        return response()->json(['message' => 'Успешно'], 200);
 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param  int  $id
      * @return Response
      */
     public function destroy(int $id): Response

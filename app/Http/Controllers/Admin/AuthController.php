@@ -5,19 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminAuthFormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthController extends Controller
 {
     public function login(AdminAuthFormRequest $request,): \Illuminate\Http\JsonResponse
     {
-
-        if (!auth('admin')->attempt($request -> validated())) {
-            throw new HttpException(404,'Пользователь не найден' );
+        if (!Auth::guard('admin')->attempt($request->only('email', 'password'), true)) {
+            throw new HttpException(404, 'Логин или пароль некорректный');
         }
 
-        $user = $request->user('admin');
-        $token = $user -> createToken('adminToken');
+        $user  = $request->user('admin');
+        $token = $user->createToken('adminToken');
         return response()->json(['token' => $token]);
     }
 

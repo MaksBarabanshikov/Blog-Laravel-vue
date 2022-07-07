@@ -3,115 +3,76 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\PostFormRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Comment;
 use App\Models\Post;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image;
 
 class PostsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResource
      */
-    public function index()
+    public function index(): JsonResource
     {
-        return Post::all();
-    }
+        $posts = Post::with(['comments.user'])->paginate(5);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return PostResource::collection($posts);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return array
+     * @param  PostFormRequest  $request
+     * @return JsonResource
      */
-    public function store(Request $request)
+    public function store(PostFormRequest $request): JsonResource
     {
-        $rules = [
-            "title" => ["required"],
-            "description" => ["required"],
-            "preview" => ["required"]
-        ];
-        $validator = Validator::make($request->all(), $rules);
+        $data = $request->validated();
 
+        if ($request->has('thumbnail')) {
+            $thumbnail = $request->get('thumbnail');
+            $fileName  = Carbon::now()->timestamp . '_' . uniqid('', true) . '.' . explode('/',
+                    explode(':', substr($thumbnail, 0, strpos($thumbnail, ';')))[1])[1];
 
-        if ($validator->fails()) {
-            return [
-                "status" => false,
-                "errors" => $validator->messages()
-            ];
+            Image::make($thumbnail)->save(public_path('/storage/posts/') . $fileName);
+            $data['thumbnail'] = '/storage/posts/' . $fileName;
         }
 
-        $post = Post::create([
-            "title" => $request->title,
-            "description" => $request->description,
-            "preview" => $request->preview
-        ]);
+        $post = Post::create($data);
 
-        return [
-            "status" => true,
-            "post" => $post
-        ];
+        return PostResource::make($post);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param  int  $id
+     * @return JsonResource
      */
-    public function show(int $id): \Illuminate\Http\JsonResponse
+    public function show(int $id): JsonResource
     {
-        $post = Post::find($id);
+        $post = Post::with('comments.user')->findOrFail($id);
 
-        if (!$post) {
-            return response()->json([
-                "status" => false,
-                "message" => "Post not found"
-            ],404);
-        }
-
-        $comments = $post -> comments() -> get();
-
-        $user = $comments->map(function ($comment) {
-            return $comment -> user() -> get("name");
-        });
-
-        return response()->json([
-            "post" => $post,
-            "comments" => $comments,
-            "user" => $user
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return PostResource::make($post);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -121,8 +82,8 @@ class PostsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param  int  $id
+     * @return Response
      */
     public function destroy($id)
     {

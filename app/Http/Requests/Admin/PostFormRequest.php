@@ -11,9 +11,9 @@ class PostFormRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return auth('admin') -> check();
+        return auth('admin')->check();
     }
 
     /**
@@ -21,13 +21,13 @@ class PostFormRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            "title" => ["required"],
-            "preview" => ["required"],
+            "title"       => ["required", "max:255"],
+            "preview"     => ["required", "max:65000"],
             "description" => ["required"],
-            "thumbnail" => ["base64image"],
+            "thumbnail"   => ["image", "max:5000"],
         ];
     }
 }

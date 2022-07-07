@@ -114,6 +114,9 @@ const router = createRouter({
     ]
 })
 
+const listAuthRoutes = ['home', 'posts'];
+const listNotAuthRoutes = ['auth'];
+
 router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('x_xsrf_token')
     const AdminToken = localStorage.getItem('ADMIN_x_xsrf_token')

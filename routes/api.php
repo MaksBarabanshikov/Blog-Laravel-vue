@@ -16,7 +16,7 @@ use App\Http\Controllers\Api\v1\PostsController;
 */
 
 Route::prefix('blog')->group(function () {
-    Route::resource('posts', PostsController::class);
+    Route::resource('posts', PostsController::class)->only('index', 'show', 'store');
 });
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/user', function (Request $request) {
