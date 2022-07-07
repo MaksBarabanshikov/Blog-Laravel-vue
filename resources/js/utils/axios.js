@@ -7,6 +7,15 @@ const instance = axios.create({
     withCredentials: true,
 });
 
+instance.interceptors.request.use(function (config) {
+    const token = localStorage.getItem('ADMIN_x_xsrf_token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
+
 instance.interceptors.response.use({},err => {
     console.log(err.response)
     if (err.response.status === 401 || err.response.status === 419) {

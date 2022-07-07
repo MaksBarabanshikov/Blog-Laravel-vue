@@ -68,8 +68,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import AdminPosts from "../Posts/AdminPosts";
+import axios from "../../../../utils/axios";
 
 export default {
     name: "AdminPanel",

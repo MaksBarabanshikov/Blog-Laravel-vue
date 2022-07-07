@@ -80,7 +80,7 @@ export default {
             this.loading = true
             axios.get('/sanctum/csrf-cookie').then(response => {
                 axios.post("/admin/login",{email: data.email, password: data.password}).then(res => {
-                    localStorage.setItem('ADMIN_x_xsrf_token', JSON.stringify(res.config.headers['X-XSRF-TOKEN']))
+                    localStorage.setItem('ADMIN_x_xsrf_token', res.data.token.plainTextToken)
                     this.loading = false
                     console.log(res)
                     this.$router.push({name: "AdminPanel"})
