@@ -1,26 +1,41 @@
 import axios from "../../utils/axios";
 
 const moduleAdminPost = {
+    state: {
+        posts: [],
+        post: {},
+        users: [],
+    },
     actions: {
-        CREATE_POST: async ({}, {data}) => {
-            console.log(data)
+        CREATE_POST: async ({}, { data }) => {
             await axios.post('admin/admin-posts', data)
                 .then(res => console.log(res))
                 .catch(e => console.log(e))
         },
-        GET_ALL_POST: async ctx => {
-            let posts
-            ctx.commit('updateAdminLoading', true)
-            await axios.get('/admin/admin-posts')
-                .then(res => posts = res.data)
-                .catch(e => console.log(e))
-                .finally(() => {
-                    ctx.commit('updateAdminPosts', posts)
-                    ctx.commit('updateAdminLoading', false)
-                })
+        async GET_ALL_POST({ commit }) {
+
+            commit('updateAdminPosts', {data: null, loading: true})
+
+            try {
+                const { data } = await axios.get('/admin/admin-posts')
+
+                commit('updateAdminPosts', {data, loading: false})
+                console.log({data, loading: false})
+
+                return {data, error: null}
+            } catch (error) {
+                console.log(error)
+                const {
+                    data: { message },
+                    status,
+                } =  error.response
+
+                commit('updateAdminPosts', { message, loading: false })
+
+                return {data: null, error: { message, status} }
+            }
         },
         GET_CURRENT_POST: async (ctx, {id}) => {
-            ctx.commit('updateAdminLoading', true)
             let post
             await axios.get(`/admin/admin-posts/${id}`)
                 .then(res => {
@@ -32,7 +47,6 @@ const moduleAdminPost = {
                 })
                 .finally(() => {
                     ctx.commit('updateCurrentPost', post)
-                    ctx.commit('updateAdminLoading', false)
                 })
         },
         UPDATE_POST: async  ({},{id, data}) => {
@@ -51,13 +65,11 @@ const moduleAdminPost = {
         },
         GET_ALL_USERS: async ctx => {
             let users
-            ctx.commit('updateAdminLoading', true)
             await axios.get('/admin/admin-users')
                 .then(res => users = res.data.users)
                 .catch(e => console.log(e))
                 .finally(() => {
                     ctx.commit('updateUsers', users)
-                    ctx.commit('updateAdminLoading', false)
                 })
         },
         DELETE_USER: async ({ctx, dispatch}, {id}) => {
@@ -67,35 +79,23 @@ const moduleAdminPost = {
         }
     },
     mutations: {
-        updateAdminPosts: (state, posts) => {
-            state.posts = posts
+        updateAdminPosts: (state, payload) => {
+            state.posts = payload
         },
 
-        updateUsers: (state, users) => {
-            state.users = users
+        updateUsers: (state, payload) => {
+            state.users = payload
         },
-        updateCurrentPost: (state, post) => {
-            state.post = post
+        updateCurrentPost: (state, payload) => {
+            state.post = payload
         },
-
-        updateAdminLoading: (state, loading) => {
-            state.loading = loading
-        }
-    },
-    state: {
-        posts: [],
-        post: {},
-        users: [],
-        loading: true
     },
     getters: {
-        getPostsAdmin: state => state.posts.posts,
-        getPostsComment: state => state.posts.comments,
+        getPostsAdmin: state => state.posts,
         allUsers: state => state.users,
         currentPost: state => state.post.post,
         currentPostComments: state => state.post.comments,
         currentPostUsers: state => state.post.user,
-        getAdminLoading: state => state.loading
     }
 }
 

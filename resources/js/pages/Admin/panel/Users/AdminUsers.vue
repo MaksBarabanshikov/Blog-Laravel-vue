@@ -1,7 +1,7 @@
 <template>
     <Loader v-if="getAdminLoading"/>
     <div v-else
-         class="admin-panel__posts row g-4"
+         class="admin-panel__users row g-4"
     >
         <AdminUserEl v-for="user in allUsers"
                      :id="user.id"

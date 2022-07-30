@@ -16,17 +16,18 @@
                 </button>
             </div>
         </div>
-        <Loader v-if="getAdminLoading"/>
-        <div v-else-if="!getAdminLoading"
+        <Loader v-if="getPostsAdmin.loading"/>
+        <div v-else-if="getPostsAdmin.data"
              class="admin-panel__posts"
              :class="activeView"
         >
-            <AdminPostEl v-for="(post, index) in getPostsAdmin"
+            <AdminPostEl v-for="post in getPostsAdmin.data.data"
                          :id="post.id"
                          :title="post.title"
+                         :thumbnail="post.thumbnail"
                          :preview="post.preview"
                          :date="post.created_at"
-                         :comments="getPostsComment[index].length"
+                         :comments="post.comments.length"
                          :typeBlock="activeView"
             />
         </div>
@@ -54,9 +55,7 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'getAdminLoading',
             'getPostsAdmin',
-            'getPostsComment'
         ])
     },
     mounted() {
@@ -65,16 +64,24 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .admin-panel__posts {
     display: grid;
     gap: 10px;
 }
 .admin-panel__posts.panel {
     grid-template-columns: 1fr;
+    align-content: baseline;
 }
 .admin-panel__posts.tile {
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 20px;
 }
+
+.admin-panel__posts img {
+    max-height: 200px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
 </style>

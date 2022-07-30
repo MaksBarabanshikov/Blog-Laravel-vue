@@ -17,7 +17,6 @@ instance.interceptors.request.use(function (config) {
 
 
 instance.interceptors.response.use({},err => {
-    console.log(err.response)
     if (err.response.status === 401 || err.response.status === 419) {
         const token = localStorage.getItem('x_xsrf_token')
         const AdminToken = localStorage.getItem('ADMIN_x_xsrf_token')

@@ -9,6 +9,7 @@ use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -16,27 +17,17 @@ use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::with(['comments.user'])->paginate(5);
 
-        $comments = $posts->map(function ($post) {
-            return $post->comments()->get();
-        });
-
-        $data = [
-            "posts"    => $posts,
-            "comments" => $comments,
-        ];
-
-        return response()->json(
-            $data
-            , 200);
+        return PostResource::collection($posts);
     }
 
     /**

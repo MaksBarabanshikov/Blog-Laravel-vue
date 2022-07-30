@@ -22,9 +22,10 @@ class PostResource extends JsonResource
         return [
             'id'          => $this->id,
             'title'       => $this->title,
-            'description' => $this->description,
+            'preview'     => $this->preview,
             'thumbnail'   => $this->thumbnail,
             'comments'    => CommentResource::collection($this->whenLoaded('comments')),
+            'created_at'  => $this->created_at
         ];
     }
 }

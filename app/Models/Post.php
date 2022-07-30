@@ -10,13 +10,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Post extends Model
 {
     use HasFactory;
-    use SoftDeletes;
+//    use SoftDeletes;
 
     protected $fillable = [
         "title",
         "description",
         "preview",
         "thumbnail",
+        'deleted_at'
     ];
 
     public function comments(): HasMany

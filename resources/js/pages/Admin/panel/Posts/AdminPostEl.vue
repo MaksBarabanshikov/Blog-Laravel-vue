@@ -14,6 +14,7 @@
                  :class="typeBlock === 'panel' ? 'flex-row align-items-center': 'flex-column'"
             >
                 <div>
+                    <img :src="thumbnail" alt="Пост">
                     <p class="mb-2">
                         {{ preview }}
                     </p>
@@ -59,6 +60,9 @@ export default {
             type: String,
         },
         preview: {
+            type: String,
+        },
+        thumbnail:{
             type: String,
         },
         date: {
