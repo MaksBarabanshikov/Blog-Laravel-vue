@@ -90,6 +90,7 @@ export default {
             'UPDATE_POST'
         ]),
         onSubmit(data) {
+            console.log(data)
             this.UPDATE_POST({
                 id: this.$route.params,
                 data: {

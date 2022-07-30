@@ -4,10 +4,10 @@
         <div class="comments__body">
             <div class="my-3 p-3 bg-body border rounded shadow-sm">
                 <CommentItem
-                    v-for="(comment, index) in comments"
+                    v-for="comment in comments"
                     :text="comment.text"
                     :date="new Date(comment.created_at).toLocaleString()"
-                    :name="users[index][0].name"
+                    :name="comment.user.name"
                 />
             </div>
         </div>
@@ -22,9 +22,6 @@ export default {
     props: {
         comments: {
             type: Object,
-        },
-        users: {
-            type: Object
         }
     },
     name: "Comments",

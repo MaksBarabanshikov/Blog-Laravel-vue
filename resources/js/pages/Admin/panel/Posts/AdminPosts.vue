@@ -17,11 +17,11 @@
             </div>
         </div>
         <Loader v-if="getPostsAdmin.loading"/>
-        <div v-else-if="getPostsAdmin.data"
+        <div v-else-if="!!getPostsAdmin.data && getPostsAdmin.loading === false"
              class="admin-panel__posts"
              :class="activeView"
         >
-            <AdminPostEl v-for="post in getPostsAdmin.data.data"
+            <AdminPostEl v-for="post in getPostsAdmin.data"
                          :id="post.id"
                          :title="post.title"
                          :thumbnail="post.thumbnail"

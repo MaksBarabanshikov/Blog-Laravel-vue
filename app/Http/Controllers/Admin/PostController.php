@@ -68,30 +68,13 @@ class PostController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return JsonResponse
+     * @return PostResource
      */
-    public function show(int $id): JsonResponse
+    public function show(int $id): PostResource
     {
-        $post = Post::find($id);
+        $post = Post::with('comments.user')->findOrFail($id);
 
-        if (!$post) {
-            return response()->json([
-                "status"  => false,
-                "message" => "Post not found",
-            ], 404);
-        }
-
-        $comments = $post->comments()->get();
-
-        $user = $comments->map(function ($comment) {
-            return $comment->user()->get("name");
-        });
-
-        return response()->json([
-            "post"     => $post,
-            "comments" => $comments,
-            "user"     => $user,
-        ]);
+        return PostResource::make($post);
     }
 
     /**

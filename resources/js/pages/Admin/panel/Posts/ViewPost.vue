@@ -1,18 +1,18 @@
 <template>
     <div>
-        <Loader v-if="getAdminLoading"/>
-        <div v-else-if="!getAdminLoading">
+        <Loader v-if="currentPost.loading"/>
+        <div v-else-if="!!currentPost.data && currentPost.loading === false">
             <div class="post-body mb-5 pb-5">
                 <h1 class="d-flex align-items-center">
-                    {{ currentPost.title }}
+                    {{ currentPost.data.title }}
                     <span class="ms-4 p-2 fs-6 d-inline-block bg-success text-white rounded-pill">
-                        {{ new Date(currentPost.created_at).toLocaleString() }}
+                        {{ new Date(currentPost.data.created_at).toLocaleString() }}
                     </span>
                 </h1>
                 <div class="text-center my-4">
-                    <img :src="currentPost.thumbnail" alt="Изображение">
+                    <img :src="currentPost.data.thumbnail" alt="Изображение">
                 </div>
-                <div v-html="currentPost.description"/>
+                <div v-html="currentPost.data.description"/>
             </div>
             <Form class="mt-5">
                 <div class="form-floating">
@@ -29,9 +29,20 @@
                     Оставить комментарий
                 </button>
             </Form>
-            <Comments v-if="currentPostComments.length" :comments="currentPostComments" :users="currentPostUsers"/>
-            <h2 v-else-if="!currentPostComments.length" class="mt-5 text-info">Комментарий нет</h2>
+            <Comments
+                v-if="currentPost.data.comments.length"
+                :comments="currentPost.data.comments"
+            />
+            <h2
+                v-else-if="!currentPost.data.comments.length"
+                class="mt-5 text-info"
+            >
+                Комментарий нет
+            </h2>
         </div>
+        <h1 class="text-danger" v-if="currentPost.error !== null">
+            {{ currentPost.error }}
+        </h1>
     </div>
 </template>
 
@@ -56,23 +67,21 @@ export default {
         ]),
     },
     computed: {
-      ...mapGetters([
-          'currentPost',
-          'currentPostComments',
-          'currentPostUsers',
-          'getAdminLoading'
-      ])
+        ...mapGetters([
+            'currentPost',
+        ])
     },
     mounted() {
+        console.log(this.$route.params)
         this.GET_CURRENT_POST(this.$route.params);
     }
 }
 </script>
 
 <style scoped>
-    img {
-        margin: auto;
-        max-width: 100%;
-        max-height: 400px;
-    }
+img {
+    margin: auto;
+    max-width: 100%;
+    max-height: 400px;
+}
 </style>

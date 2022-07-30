@@ -27,7 +27,7 @@ class PostFormRequest extends FormRequest
             "title"       => ["required", "max:255"],
             "preview"     => ["required", "max:65000"],
             "description" => ["required"],
-            "thumbnail"   => ["image", "max:5000"],
+            "thumbnail"   => ["base64image"],
         ];
     }
 }

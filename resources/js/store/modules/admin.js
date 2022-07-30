@@ -4,6 +4,8 @@ const moduleAdminPost = {
     state: {
         posts: [],
         post: {},
+        updatePost: {},
+        putPost: {},
         users: [],
     },
     actions: {
@@ -12,51 +14,59 @@ const moduleAdminPost = {
                 .then(res => console.log(res))
                 .catch(e => console.log(e))
         },
-        async GET_ALL_POST({ commit }) {
+        GET_ALL_POST: async ({ commit }) => {
 
-            commit('updateAdminPosts', {data: null, loading: true})
+            commit('updateAdminPosts', {data: null, error: null, loading: true})
 
             try {
                 const { data } = await axios.get('/admin/admin-posts')
 
-                commit('updateAdminPosts', {data, loading: false})
-                console.log({data, loading: false})
+                commit('updateAdminPosts', {...data, error: null, loading: false})
 
-                return {data, error: null}
+                return {...data, error: null}
             } catch (error) {
-                console.log(error)
                 const {
                     data: { message },
                     status,
                 } =  error.response
 
-                commit('updateAdminPosts', { message, loading: false })
+                commit('updateAdminPosts', { data: null, error: {message, status}, loading: false })
 
                 return {data: null, error: { message, status} }
             }
         },
-        GET_CURRENT_POST: async (ctx, {id}) => {
-            let post
-            await axios.get(`/admin/admin-posts/${id}`)
-                .then(res => {
-                    console.log(res)
-                    post = res.data
-                })
-                .catch(e => {
-                    console.log(e)
-                })
-                .finally(() => {
-                    ctx.commit('updateCurrentPost', post)
-                })
+        GET_CURRENT_POST: async ({ commit }, {id}) => {
+
+            commit('updateCurrentPost', {data: null, error: null, loading: true})
+
+            try {
+                const { data } = await axios.get(`/admin/admin-posts/${id}`)
+
+                commit('updateCurrentPost', {...data, error: null, loading: false})
+
+                return {...data, error: null}
+            } catch (error) {
+                const {
+                    data: { message },
+                    status,
+                } =  error.response
+
+                commit('updateCurrentPost', {data: null, error: {message, status}, loading: false})
+
+                return {data: null, error: { message, status} }
+            }
         },
-        UPDATE_POST: async  ({},{id, data}) => {
-            await axios.put(`/admin/admin-posts/${id.id}`,data)
-                .then(res => {
-                    console.log(res)
-                })
-                .catch(e => {
-                    console.log(e);
-                })
+        UPDATE_POST: async  ({ commit },{ id, newPost }) => {
+
+            commit('updatePutPost', {data: null, error: null, loading: true})
+
+            try {
+              const { data } =  await axios.put(`/admin/admin-posts/${id.id}`, newPost )
+
+                console.log(data)
+            } catch (error) {
+                console.log(error)
+            }
         },
         DELETE_POST: async ({ctx, dispatch}, {id}) => {
             await axios.delete(`/admin/admin-posts/${id}`)
@@ -82,9 +92,11 @@ const moduleAdminPost = {
         updateAdminPosts: (state, payload) => {
             state.posts = payload
         },
-
         updateUsers: (state, payload) => {
             state.users = payload
+        },
+        updatePutPost: (state, payload) => {
+            state.putPost = payload
         },
         updateCurrentPost: (state, payload) => {
             state.post = payload
@@ -92,10 +104,9 @@ const moduleAdminPost = {
     },
     getters: {
         getPostsAdmin: state => state.posts,
+        putPost: state => state.putPost,
         allUsers: state => state.users,
-        currentPost: state => state.post.post,
-        currentPostComments: state => state.post.comments,
-        currentPostUsers: state => state.post.user,
+        currentPost: state => state.post
     }
 }
 
