@@ -1,7 +1,7 @@
 <template>
-    <Loader v-if="getAdminLoading"/>
-    <div v-else>
-        <h4 class="py-3">Добавить новый пост</h4>
+    <Loader v-if="currentPost.loading"/>
+    <div v-else-if="!!currentPost.data && !currentPost.loading">
+        <h4 class="py-3">Редактировать пост</h4>
         <Form enctype="multipart/form-data" @submit="onSubmit">
             <div class="form-floating">
                 <Field
@@ -10,7 +10,7 @@
                     class="form-control"
                     id="floatingTitle"
                     placeholder=""
-                    :value="currentPost.title"
+                    :value="currentPost.data.title"
                     rules="required"
                 />
                 <ErrorMessage class="error-message text-danger position-absolute" name="title"/>
@@ -24,13 +24,13 @@
                     class="form-control"
                     id="floatingPreview"
                     placeholder="Краткое описание блога"
-                    :value="currentPost.preview"
+                    :value="currentPost.data.preview"
                     rules="required"
                 />
                 <ErrorMessage class="error-message text-danger position-absolute" name="preview"/>
                 <label for="floatingPreview">Описание</label>
             </div>
-            <img id="previewImage" src="" alt="">
+            <img id="previewImage" :src="currentPost.data.thumbnail" alt="">
             <label class="position-static d-flex flex-column px-0">
                 Превью
                 <input
@@ -46,7 +46,7 @@
             <label class="my-4">
                 Контент поста
             </label>
-            <creditor :content="currentPost.description" @inputListener="currentValue"/>
+            <creditor :content="currentPost.data.description" @inputListener="currentValue"/>
             <Field
                 name="description"
                 type="text"
@@ -58,7 +58,9 @@
                 class="form-button w-50 btn btn-lg btn-primary mb-2 position-relative mt-4"
                 type="submit"
             >
-                <span>Изменить пост</span>
+                <Loader v-if="putPost.loading"/>
+                <span v-if="putPost.error !== null">{{putPost.error}}</span>
+                <span v-if="!!!putPost.error">Изменить пост</span>
             </button>
         </Form>
     </div>
@@ -90,10 +92,9 @@ export default {
             'UPDATE_POST'
         ]),
         onSubmit(data) {
-            console.log(data)
             this.UPDATE_POST({
                 id: this.$route.params,
-                data: {
+                newPost: {
                     title: data.title,
                     description: data.description,
                     preview: data.preview,
@@ -125,7 +126,7 @@ export default {
     computed: {
         ...mapGetters([
             'currentPost',
-            'getAdminLoading'
+            'putPost'
         ]),
     },
     mounted() {

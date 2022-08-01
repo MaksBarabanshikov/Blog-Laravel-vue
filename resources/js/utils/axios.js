@@ -29,6 +29,8 @@ instance.interceptors.response.use({},err => {
             router.push({name: 'AdminLogin'})
         }
     }
+
+    return { data: err.response.data, status: err.response.status  }
 })
 
 export default instance

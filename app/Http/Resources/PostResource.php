@@ -24,6 +24,7 @@ class PostResource extends JsonResource
             'title'       => $this->title,
             'preview'     => $this->preview,
             'thumbnail'   => $this->thumbnail,
+            'description'   =>$this->description,
             'comments'    => CommentResource::collection($this->whenLoaded('comments')),
             'created_at'  => $this->created_at
         ];

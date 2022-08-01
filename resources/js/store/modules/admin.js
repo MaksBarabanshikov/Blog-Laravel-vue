@@ -61,11 +61,22 @@ const moduleAdminPost = {
             commit('updatePutPost', {data: null, error: null, loading: true})
 
             try {
-              const { data } =  await axios.put(`/admin/admin-posts/${id.id}`, newPost )
+             const { data, status } = await axios.put(`/admin/admin-posts/${id.id}`, newPost )
 
-                console.log(data)
+                if (status >= 400) {
+                   throw new Error(data.message || 'Что-то пошло не так')
+                }
+
+                commit('updatePutPost', {data, error: null, loading: false})
+
+                return {data, error: null}
+              //
+              // const { data } =  await response
             } catch (error) {
-                console.log(error)
+
+                commit('updatePutPost', {data: null, error, loading: false})
+
+                return {data: null, error }
             }
         },
         DELETE_POST: async ({ctx, dispatch}, {id}) => {
