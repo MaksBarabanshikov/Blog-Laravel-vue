@@ -4,8 +4,8 @@
     </main>
     <main v-else class="container">
         <div class="row mb-5 g-3">
-            <BlogCard
-                v-for="post in allPosts"
+            <BlogCard v-for="post in allPosts"
+                :key="post.id"
                 :id="post.id"
                 :thumbnail="post.thumbnail"
                 :title="post.title"

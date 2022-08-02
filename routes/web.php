@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes();
 
-Route::get('/test',function () {
-    return 11;
-});
-
-
 Route::get('/{any}', [\App\Http\Controllers\IndexController::class, 'index'])
     ->where('any','.*')->name('index');
 

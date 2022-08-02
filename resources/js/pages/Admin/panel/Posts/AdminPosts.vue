@@ -22,6 +22,7 @@
              :class="activeView"
         >
             <AdminPostEl v-for="post in getPostsAdmin.data"
+                         :key="post.id"
                          :id="post.id"
                          :title="post.title"
                          :thumbnail="post.thumbnail"

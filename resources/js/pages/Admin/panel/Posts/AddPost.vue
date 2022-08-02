@@ -55,7 +55,9 @@
                 class="form-button w-50 btn btn-lg btn-primary mb-2 position-relative mt-4"
                 type="submit"
             >
-                <span>Добавить пост</span>
+                <Loader v-if="createPost.loading"/>
+                <span v-if="!!createPost.error">{{createPost.error}}</span>
+                <span v-if="!!!createPost.error">Добавить пост</span>
             </button>
         </Form>
     </div>
@@ -65,7 +67,7 @@
 import {Form, Field, ErrorMessage, defineRule} from 'vee-validate'
 import Loader from "../../../../components/Loader";
 import creditor from "../../../../components/creditor";
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 defineRule("required", value => {
     if (!value) {
@@ -88,10 +90,15 @@ export default {
         description: '',
         image: null,
     }),
+    computed: {
+      ...mapGetters([
+          'createPost'
+      ])
+    },
     methods: {
         onSubmit(data) {
             this.CREATE_POST({
-                data: {
+                newPost: {
                     title: data.title,
                     description: data.description,
                     preview: data.preview,

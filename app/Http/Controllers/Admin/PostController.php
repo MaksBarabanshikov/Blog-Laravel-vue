@@ -25,26 +25,16 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['comments.user'])->paginate(5);
+        $posts = Post::with(['comments.user'])->paginate(10);
 
         return PostResource::collection($posts);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return JsonResponse
+     * @param PostFormRequest $request
+     * @return JsonResource
      */
     public function store(PostFormRequest $request): JsonResource
     {
@@ -78,21 +68,10 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param PostFormRequest $request
+     * @param int $id
      * @return JsonResponse
      */
     public function update(PostFormRequest $request, int $id): JsonResponse
@@ -105,7 +84,7 @@ class PostController extends Controller
             $thumbnail = $request->get('thumbnail');
             $fileName  = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/',
                     explode(':', substr($thumbnail, 0, strpos($thumbnail, ';')))[1])[1];
-            Image::make($thumbnail)->save(public_path('/storage/posts/') . $fileName);
+            Image::make($thumbnail)->save(public_path('storage/posts/') . $fileName);
             $data['thumbnail'] = '/storage/posts/' . $fileName;
         }
 

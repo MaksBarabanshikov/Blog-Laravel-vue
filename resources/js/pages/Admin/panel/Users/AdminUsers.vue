@@ -1,9 +1,9 @@
 <template>
-    <Loader v-if="getAdminLoading"/>
-    <div v-else
+    <Loader v-if="allUsers.loading"/>
+    <div v-else-if="!!allUsers.data"
          class="admin-panel__users row g-4"
     >
-        <AdminUserEl v-for="user in allUsers"
+        <AdminUserEl v-for="user in allUsers.data" :key="user.id"
                      :id="user.id"
                      :name="user.name"
                      :email="user.email"
@@ -34,7 +34,6 @@ export default {
     },
     computed: {
       ...mapGetters([
-          'getAdminLoading',
           'allUsers'
       ])
     },
