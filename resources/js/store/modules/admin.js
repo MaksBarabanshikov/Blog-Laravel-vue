@@ -11,6 +11,7 @@ const moduleAdminPost = {
     },
     actions: {
         CREATE_POST: async ({commit}, { newPost }) => {
+
             commit('updatePost', {data: null, error: null, loading: true})
 
             try {
