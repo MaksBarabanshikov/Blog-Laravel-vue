@@ -76,12 +76,15 @@ export default {
     },
     methods: {
         ...mapActions([
-           'SEND_COMMENT'
+            'SEND_COMMENT',
+            'GET_POST_USER'
         ]),
         onSubmit(values) {
             this.SEND_COMMENT({
                 id: this.$route.params,
                 message: values.text
+            }).then(() => {
+                this.GET_POST_USER(this.$route.params)
             })
         },
     },

@@ -1,7 +1,6 @@
 import {createStore} from "vuex";
-import modulePost from "./service/post";
-import modulePostData from "./modules/postData";
-import moduleAdminPost from "./service/admin";
+import modulePost from "./modules/user";
+import moduleAdminPost from "./modules/admin";
 
 const store = createStore({
     state: {},
@@ -10,7 +9,6 @@ const store = createStore({
     getters: {},
     modules: {
         post: modulePost,
-        postData: modulePostData,
         adminPost: moduleAdminPost,
     }
 })

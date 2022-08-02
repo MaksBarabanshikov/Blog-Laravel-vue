@@ -4,7 +4,8 @@ const modulePost = {
     state: {
         posts: {},
         currentPost: {},
-        sendComment: {}
+        sendComment: {},
+        logout: {}
     },
     actions: {
         GET_POSTS_USER: async ({ commit }) => {
@@ -50,7 +51,7 @@ const modulePost = {
                 return { data: null, error }
             }
         },
-        SEND_COMMENT: async ({ commit }, { id , message }) => {
+        SEND_COMMENT: async ({ commit, dispatch }, { id , message }) => {
 
             commit('updateSendComment', {data: null, error: null, loading: true})
 
@@ -71,17 +72,48 @@ const modulePost = {
 
                 return {data: null, error}
             }
-        }
+        },
+        LOGOUT: async ({commit}) => {
+            try {
+                const { data, status } = await axios.post('/logout')
+
+                if (status >= 400) {
+                    throw new Error(data.message || 'Что-то пошло не так')
+                }
+
+                commit('updateLogout', { data, error: null })
+
+                localStorage.removeItem('x_xsrf_token')
+
+                return { data, error: null }
+
+            } catch(error) {
+
+                commit('updateLogout', { data: null, error })
+
+                return {data: null, error}
+            }
+        },
+        LOGIN: async ({ commit }) => {
+
+        },
+        REGISTER: async ({ commit }) => {
+
+        },
+
+
     },
     mutations: {
         updatePosts: (state, payload) => state.posts = payload,
         updatePost: (state, payload) => state.currentPost = payload,
         updateSendComment: (state, payload) => state.sendComment = payload,
+        updateLogout: (state, payload) => state.logout = payload
     },
     getters: {
         allPosts: state => state.posts,
         currentPostUser: state => state.currentPost,
         sendComment: state => state.sendComment,
+        getLogout: state => state.logout,
     }
 }
 

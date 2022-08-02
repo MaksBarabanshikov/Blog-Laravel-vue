@@ -58,6 +58,7 @@
 <script>
 
 import axios from "../utils/axios";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "Header",
@@ -65,26 +66,19 @@ export default {
         token: null,
         name: null
     }),
-    mounted() {
-        this.getToken()
-        this.getName()
-
-    },
-    updated() {
-        this.getToken()
-        this.getName()
-    },
     methods: {
-        getToken() {
-            this.token = localStorage.getItem('x_xsrf_token')
-        },
+        ...mapActions([
+           'LOGOUT'
+        ]),
 
         logout() {
-            axios.post('/logout')
-                .then(res => {
-                    localStorage.removeItem('x_xsrf_token')
-                    this.$router.push({name: 'auth'})
-                })
+            this.LOGOUT().then(() => {
+                this.$router.push({name: 'auth'})
+            })
+        },
+
+        getToken() {
+            this.token = localStorage.getItem('x_xsrf_token')
         },
 
         getName() {
@@ -97,7 +91,16 @@ export default {
                     })
             }
         }
-    }
+    },
+    computed: {
+        ...mapGetters([
+            'getLogout'
+        ])
+    },
+    mounted() {
+        this.getToken()
+        this.getName()
+    },
 }
 </script>
 

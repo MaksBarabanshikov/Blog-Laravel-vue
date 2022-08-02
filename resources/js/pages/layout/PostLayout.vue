@@ -51,7 +51,7 @@ export default {
     },
     mounted() {
         this.GET_POST_USER(this.$route.params)
-    },
+    }
 }
 </script>
 
