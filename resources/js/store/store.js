@@ -1,6 +1,7 @@
-import {createStore} from "vuex";
+import { createStore } from "vuex";
 import modulePost from "./modules/user";
 import moduleAdminPost from "./modules/admin";
+import moduleLocalStorage from "./modules/localStorage"
 
 const store = createStore({
     state: {},
@@ -10,6 +11,7 @@ const store = createStore({
     modules: {
         post: modulePost,
         adminPost: moduleAdminPost,
+        localStorage: moduleLocalStorage
     }
 })
 

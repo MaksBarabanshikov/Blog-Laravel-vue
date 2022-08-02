@@ -15,8 +15,8 @@
                     </li>
                 </ul>
                 <div class="col-md-3 d-flex justify-content-end">
-                    <div
-                        v-if="!token"
+                    <div v-if="getToken === null"
+                         :key="getToken"
                         class="d-flex align-items-center"
                     >
                         <button
@@ -34,12 +34,12 @@
                             Регистрация
                         </button>
                     </div>
-                    <div
-                        v-if="token"
+                    <div v-else-if="!!getName.data"
+                         :key="getName.data"
                         class="d-flex align-items-center"
                     >
                         <h5 class="mb-0 ">
-                            {{ name }}
+                            {{getName.data.name}}
                         </h5>
                         <button
                             type="button"
@@ -57,49 +57,35 @@
 
 <script>
 
-import axios from "../utils/axios";
 import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "Header",
-    data: () => ({
-        token: null,
-        name: null
-    }),
     methods: {
         ...mapActions([
-           'LOGOUT'
+            'LOGOUT',
+            'checkToken',
+            'checkName'
         ]),
 
         logout() {
             this.LOGOUT().then(() => {
+                this.checkToken()
+                this.checkName()
                 this.$router.push({name: 'auth'})
             })
         },
-
-        getToken() {
-            this.token = localStorage.getItem('x_xsrf_token')
-        },
-
-        getName() {
-            if (localStorage.getItem('x_xsrf_token')) {
-                axios.get('/api/user')
-                    .then(res => {
-                        this.name = res.data.name
-                    })
-                    .catch(e => {
-                    })
-            }
-        }
     },
     computed: {
         ...mapGetters([
-            'getLogout'
+            'getLogout',
+            'getToken',
+            'getName'
         ])
     },
     mounted() {
-        this.getToken()
-        this.getName()
+        this.checkToken()
+        this.checkName()
     },
 }
 </script>

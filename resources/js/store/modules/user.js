@@ -1,11 +1,14 @@
 import axios from "../../utils/axios";
+import router from "../../router/router";
 
 const modulePost = {
     state: {
         posts: {},
         currentPost: {},
         sendComment: {},
-        logout: {}
+        logoutUser: {},
+        loginUser: {},
+        registerUser: {}
     },
     actions: {
         GET_POSTS_USER: async ({ commit }) => {
@@ -73,7 +76,7 @@ const modulePost = {
                 return {data: null, error}
             }
         },
-        LOGOUT: async ({commit}) => {
+        LOGOUT: async ({ commit }) => {
             try {
                 const { data, status } = await axios.post('/logout')
 
@@ -94,26 +97,96 @@ const modulePost = {
                 return {data: null, error}
             }
         },
-        LOGIN: async ({ commit }) => {
+        LOGIN_USER: async ({ commit , dispatch }, { email, password }) => {
+            axios.get('/sanctum/csrf-cookie').then(async () => {
+                commit('updateLogin', { data: null, error: null, loading: true })
+                try {
+                    const { data, status } = await axios.post('/login', { email, password })
+
+                    if (status >= 400) {
+                        throw new Error(data.message || "Что-то пошло не так")
+                    }
+
+                    localStorage.setItem('x_xsrf_token', JSON.stringify('rtqewrtsdfgdsfgsdgf|||asfsdf'))
+
+                    commit('updateLogin', { data, error: null, loading: false })
+
+                    dispatch('checkToken')
+
+                    dispatch('checkName')
+
+                    await router.push({name: 'all-blogs'})
+
+                    return { data, error: null }
+
+                } catch(error) {
+
+                    commit('updateLogin', { data: null, error, loading: false })
+
+                    dispatch('checkToken')
+
+                    dispatch('checkName')
+
+                    return { data: null, error }
+                }
+            })
+        },
+        REGISTER: async (
+            { commit, dispatch },
+            { name, email, password, password_confirmation  }
+        ) => {
+            axios.get('/sanctum/csrf-cookie').then(async () => {
+                commit('updateRegister', { data: null, error: null, loading: true })
+                try {
+                    const { data, status } = await axios.post('/register',
+                        { name , email , password, password_confirmation }
+                    )
+
+                     if (status >= 400) {
+                        throw new Error(data.message || "Что-то пошло не так")
+                    }
+
+                     localStorage.setItem('x_xsrf_token', JSON.stringify('rtqewrtsdfgdsfgsdgf|||asfsdf'))
+
+                     commit('updateRegister', { data, error: null, loading: false })
+
+                     dispatch('checkToken')
+
+                     dispatch('checkName')
+
+                     await router.push({name: 'all-blogs'})
+
+                    return { data, error: null }
+
+                } catch (error) {
+
+                    commit('updateRegister', { data: null, error, loading: false })
+
+                    dispatch('checkToken')
+
+                    dispatch('checkName')
+
+                    return { data:null, error }
+                }
+            })
 
         },
-        REGISTER: async ({ commit }) => {
-
-        },
-
-
     },
     mutations: {
         updatePosts: (state, payload) => state.posts = payload,
         updatePost: (state, payload) => state.currentPost = payload,
         updateSendComment: (state, payload) => state.sendComment = payload,
-        updateLogout: (state, payload) => state.logout = payload
+        updateLogout: (state, payload) => state.logoutUser = payload,
+        updateLogin: (state, payload) => state.loginUser = payload,
+        updateRegister: (state, payload) => state.registerUser = payload
     },
     getters: {
         allPosts: state => state.posts,
         currentPostUser: state => state.currentPost,
         sendComment: state => state.sendComment,
-        getLogout: state => state.logout,
+        getLogout: state => state.logoutUser,
+        getLoginUser: state => state.loginUser,
+        getRegisterUser: state => state.registerUser
     }
 }
 

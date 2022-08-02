@@ -1,14 +1,13 @@
 <template>
     <Loader v-if="currentPostUser.loading"/>
 
-    <Post v-if="!!currentPostUser?.data"
+    <Post v-if="!!currentPostUser.data"
           :title="currentPostUser.data.title"
           :date="new Date(currentPostUser.data.created_at).toLocaleString()"
           :thumbnail="currentPostUser.data.thumbnail"
           :description="currentPostUser.data.description"
           :comments="currentPostUser.data.comments"
     />
-
     <MessagePopup v-if="!!currentPostUser.error"/>
 </template>
 

@@ -17,9 +17,9 @@
             <button
                 class="w-100 btn btn-lg btn-primary mb-2 position-relative"
                 type="submit"
-                :disabled="loading"
+                :disabled="getLoginUser.loading"
             >
-                <Loader class="spin" v-if="loading"/>
+                <Loader class="spin" v-if="getLoginUser.loading"/>
                 <span v-else>Войти</span>
 
             </button>
@@ -32,14 +32,15 @@
             <p class="mt-3 mb-3 text-muted">© Maksim Barabanshikov</p>
         </Form>
     </div>
-    <div v-if="message && visible" class="form-alert alert alert-danger position-absolute m-0" role="alert">
-        {{message}}
+    <div v-if="!!getLoginUser.error" class="form-alert alert alert-danger position-absolute m-0" role="alert">
+        {{getLoginUser.error}}
     </div>
 </template>
 <script>
 import Loader from "../../components/Loader";
 import {Form, Field, ErrorMessage, defineRule} from 'vee-validate'
 import axios from "axios";
+import {mapActions, mapGetters} from "vuex";
 
 defineRule('email', value => {
     // if the field is not a valid email
@@ -73,32 +74,23 @@ export default {
         Field,
         ErrorMessage
     },
-    data: () => ({
-        loading: false,
-        message: null,
-        visible: false
-    }),
     methods: {
+        ...mapActions([
+           'LOGIN_USER',
+           'checkName',
+           'checkToken'
+        ]),
         onSubmit(values) {
-            this.login(values)
+            this.LOGIN_USER(values).then(() => {
+                this.checkToken()
+                this.checkName()
+            })
         },
-        login(data) {
-            this.loading = true
-            axios.get('/sanctum/csrf-cookie').then(response => {
-                axios.post('/login', {email: data.email, password: data.password})
-                    .then(res => {
-                        localStorage.setItem('x_xsrf_token', JSON.stringify(res.config.headers['X-XSRF-TOKEN']))
-                        this.loading = false
-                        this.$router.push({name: "all-blogs"})
-                    }).catch(e => {
-                    this.visible = true
-                    this.loading = false
-                    setTimeout(() => this.visible = false, 5000)
-                    return this.message = e.response.data.message
-                })
-            });
-
-        }
+    },
+    computed: {
+        ...mapGetters([
+            'getLoginUser'
+        ])
     }
 }
 </script>

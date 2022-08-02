@@ -53,8 +53,9 @@
             <button
                 class="form-button w-100 btn btn-lg btn-success mb-2 position-relative"
                 type="submit"
+                :disabled="getRegisterUser.loading"
             >
-                <Loader class="spin" v-if="loading"/>
+                <Loader class="spin" v-if="getRegisterUser.loading"/>
                 <span v-else>Регистрация</span>
             </button>
 
@@ -67,8 +68,8 @@
             <p class="mt-3 mb-3 text-muted">© Maksim Barabanshikov</p>
         </Form>
     </div>
-    <div v-if="message && visible" class="form-alert alert alert-danger position-absolute m-0" role="alert">
-        {{ message }}
+    <div v-if="!!getRegisterUser.error" class="form-alert alert alert-danger position-absolute m-0" role="alert">
+        {{ getRegisterUser.error }}
     </div>
 </template>
 
@@ -76,6 +77,7 @@
 import {Form, Field, ErrorMessage, defineRule} from 'vee-validate'
 import Loader from "../../components/Loader";
 import axios from "axios";
+import {mapActions, mapGetters} from "vuex";
 
 defineRule("required", value => {
     if (!value) {
@@ -119,39 +121,18 @@ export default {
         ErrorMessage,
         Loader
     },
-    data: () => ({
-        loading: false,
-        message: null,
-        visible: false
-    }),
     methods: {
-        register(data) {
-            this.loading = true
-            console.log(data)
-            axios.get('/sanctum/csrf-cookie').then(response => {
-                axios.post("/register", {
-                    name: data.name,
-                    email: data.email,
-                    password: data.password,
-                    password_confirmation: data.password_confirmation
-                })
-                    .then(res => {
-                        localStorage.setItem('x_xsrf_token', JSON.stringify(res.config.headers['X-XSRF-TOKEN']))
-                        this.loading = false
-                        this.$router.push({name: "blog"})
-                    })
-                    .catch(e => {
-                        console.log(e.response)
-                        this.visible = true
-                        this.loading = false
-                        setTimeout(() => this.visible = false, 5000)
-                    })
-            })
-            console.log(data.name, data.email)
-        },
+        ...mapActions([
+            'REGISTER'
+        ]),
         onSubmit(values) {
-            this.register(values)
+            this.REGISTER(values)
         },
+    },
+    computed: {
+        ...mapGetters([
+            'getRegisterUser'
+        ])
     }
 }
 </script>
