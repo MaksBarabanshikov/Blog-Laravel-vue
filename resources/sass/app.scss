@@ -11,3 +11,9 @@ html, body {
     margin-right: calc(-1 * (100vw - 100%));
     text-rendering: optimizeLegibility;
 }
+
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

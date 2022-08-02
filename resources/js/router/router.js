@@ -2,7 +2,6 @@ import {createRouter, createWebHistory} from "vue-router"
 import Home from "../pages/Home/Home.vue"
 import WelcomePage from "../pages/WelcomePage/WelcomePage";
 import AllBlogs from "../pages/All-Blogs/AllBlogs";
-import Post from "../pages/Post/Post";
 import Regist from "../pages/Auth/Regist";
 import Auth from "../pages/Auth/Auth";
 import notFound from "../pages/404/notFound";
@@ -16,6 +15,7 @@ import AddPost from "../pages/Admin/panel/Posts/AddPost";
 import AdminPosts from "../pages/Admin/panel/Posts/AdminPosts";
 import EditPost from "../pages/Admin/panel/Posts/EditPost";
 import ViewPost from "../pages/Admin/panel/Posts/ViewPost";
+import PostLayout from "../pages/layout/PostLayout";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -43,7 +43,7 @@ const router = createRouter({
                 {
                     path: '/post/:id',
                     name: "post",
-                    component: Post,
+                    component: PostLayout,
                 },
                 {
                     path: '/auth',

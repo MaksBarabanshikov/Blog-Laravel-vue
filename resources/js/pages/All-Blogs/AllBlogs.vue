@@ -1,18 +1,19 @@
 <template>
-    <main v-if="getLoading">
-        <Loader/>
-    </main>
-    <main v-else class="container">
-        <div class="row mb-5 g-3">
-            <BlogCard v-for="post in allPosts"
-                :key="post.id"
-                :id="post.id"
-                :thumbnail="post.thumbnail"
-                :title="post.title"
-                :preview="post.preview"
-                :date="post.created_at"
+    <main class="container">
+        <Loader v-if="allPosts.loading"/>
+        <div v-if="!!allPosts.posts?.data"
+             class="row mb-5 g-3"
+        >
+            <BlogCard v-for="post in allPosts.posts.data"
+                      :key="post.id"
+                      :id="post.id"
+                      :thumbnail="post.thumbnail"
+                      :title="post.title"
+                      :preview="post.preview"
+                      :date="post.created_at"
             />
         </div>
+        <MessagePopup v-if="!!allPosts.error" :message="allPosts.error"/>
     </main>
 </template>
 
@@ -20,9 +21,11 @@
 import Loader from "../../components/Loader";
 import BlogCard from "../../components/BlogCard";
 import {mapGetters, mapActions} from 'vuex'
+import MessagePopup from "../../components/MessagePopup";
 export default {
     name: "AllBlogs",
     components: {
+        MessagePopup,
         BlogCard,
         Loader
     },
@@ -30,7 +33,6 @@ export default {
     computed: {
         ...mapGetters([
             'allPosts',
-            'getLoading'
         ])
     },
     mounted() {

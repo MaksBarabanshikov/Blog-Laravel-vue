@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -21,9 +22,9 @@ class PostsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResource
+     * @return AnonymousResourceCollection
      */
-    public function index(): JsonResource
+    public function index(): AnonymousResourceCollection
     {
         $posts = Post::with(['comments.user'])->paginate(5);
 

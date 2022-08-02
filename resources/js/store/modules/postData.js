@@ -27,7 +27,6 @@ const modulePostData = {
             ctx.commit('updateComments', comments)
             ctx.commit('updateUsers', users)
         }
-
     },
     mutations: {
         updateData(state, data) {
@@ -63,9 +62,6 @@ const modulePostData = {
         getUsersData(state) {
             return state.users;
         },
-        // getLoading(state) {
-        //     return state.loading
-        // },
         getNotFound(state) {
             return state.notFound
         }

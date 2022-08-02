@@ -1,7 +1,7 @@
 import {createStore} from "vuex";
-import modulePost from "./modules/post";
+import modulePost from "./service/post";
 import modulePostData from "./modules/postData";
-import moduleAdminPost from "./modules/admin";
+import moduleAdminPost from "./service/admin";
 
 const store = createStore({
     state: {},
