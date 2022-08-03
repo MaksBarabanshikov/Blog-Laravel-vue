@@ -69,11 +69,7 @@ export default {
         ]),
 
         logout() {
-            this.LOGOUT().then(() => {
-                this.checkToken()
-                this.checkName()
-                this.$router.push({name: 'auth'})
-            })
+            this.LOGOUT().then(() => this.$router.push({name: 'auth'}))
         },
     },
     computed: {
@@ -85,7 +81,6 @@ export default {
     },
     mounted() {
         this.checkToken()
-        this.checkName()
     },
 }
 </script>

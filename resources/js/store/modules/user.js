@@ -11,12 +11,12 @@ const modulePost = {
         registerUser: {}
     },
     actions: {
-        GET_POSTS_USER: async ({ commit }) => {
-            commit('updatePosts', { posts: null, error: null, loading: true })
+        GET_POSTS_USER: async ({commit}) => {
+            commit('updatePosts', {posts: null, error: null, loading: true})
 
             try {
 
-                const { data, status } = await axios.get('/api/blog/posts')
+                const {data, status} = await axios.get('/api/blog/posts')
 
                 if (status >= 400) {
                     throw new Error(data.message || 'что-то пошло не так')
@@ -24,42 +24,42 @@ const modulePost = {
 
                 commit('updatePosts', {posts: data, error: null, loading: false})
 
-                return { posts: data, error: null }
+                return {posts: data, error: null}
 
             } catch (error) {
 
-                commit('updatePosts', { posts: null, error, loading: false })
+                commit('updatePosts', {posts: null, error, loading: false})
 
-                return { data: null, error }
+                return {data: null, error}
             }
         },
-        GET_POST_USER: async ({ commit }, { id }) => {
-            commit('updatePost', { data: null, error: null, loading: true })
+        GET_POST_USER: async ({commit}, {id}) => {
+            commit('updatePost', {data: null, error: null, loading: true})
 
             try {
 
-                const { data, status } = await axios.get(`/api/blog/posts/${id}`)
+                const {data, status} = await axios.get(`/api/blog/posts/${id}`)
 
                 if (status >= 400) {
                     throw new Error(data.message || 'Что-то пошло не так')
                 }
 
-                commit('updatePost', { ...data, error: null, loading: false })
+                commit('updatePost', {...data, error: null, loading: false})
 
-                return { data, error: null }
+                return {data, error: null}
 
             } catch (error) {
-                commit('updatePost', { data: null, error, loading: false })
+                commit('updatePost', {data: null, error, loading: false})
 
-                return { data: null, error }
+                return {data: null, error}
             }
         },
-        SEND_COMMENT: async ({ commit, dispatch }, { id , message }) => {
+        SEND_COMMENT: async ({commit, dispatch}, {id, message}) => {
 
             commit('updateSendComment', {data: null, error: null, loading: true})
 
             try {
-                const { data, status } = await axios.post(`/api/posts/comment/${ id.id }`, {text: message})
+                const {data, status} = await axios.post(`/api/posts/comment/${id.id}`, {text: message})
 
                 if (status >= 400) {
                     throw new Error(data.message || 'Что-то пошло не так')
@@ -76,100 +76,96 @@ const modulePost = {
                 return {data: null, error}
             }
         },
-        LOGOUT: async ({ commit }) => {
+        LOGOUT: async ({commit, dispatch}) => {
+
             try {
-                const { data, status } = await axios.post('/logout')
+                const {data, status} = await axios.post('/api/logout')
 
                 if (status >= 400) {
                     throw new Error(data.message || 'Что-то пошло не так')
                 }
 
-                commit('updateLogout', { data, error: null })
+                commit('updateLogout', {data, error: null})
+
+                dispatch('checkToken')
 
                 localStorage.removeItem('x_xsrf_token')
 
-                return { data, error: null }
+                return {data, error: null}
 
-            } catch(error) {
+            } catch (error) {
 
-                commit('updateLogout', { data: null, error })
+                commit('updateLogout', {data: null, error})
+
+                dispatch('checkToken')
 
                 return {data: null, error}
             }
         },
-        LOGIN_USER: async ({ commit , dispatch }, { email, password }) => {
+        LOGIN_USER: async ({commit, dispatch}, {email, password}) => {
             axios.get('/sanctum/csrf-cookie').then(async () => {
-                commit('updateLogin', { data: null, error: null, loading: true })
+
+                commit('updateLogin', {data: null, error: null, loading: true})
+
                 try {
-                    const { data, status } = await axios.post('/login', { email, password })
+                    const {data, status} = await axios.post('/api/login', {email, password})
 
                     if (status >= 400) {
                         throw new Error(data.message || "Что-то пошло не так")
                     }
 
-                    localStorage.setItem('x_xsrf_token', JSON.stringify('rtqewrtsdfgdsfgsdgf|||asfsdf'))
+                    await localStorage.setItem('x_xsrf_token', data.plainTextToken )
 
-                    commit('updateLogin', { data, error: null, loading: false })
-
-                    dispatch('checkToken')
-
-                    dispatch('checkName')
-
-                    await router.push({name: 'all-blogs'})
-
-                    return { data, error: null }
-
-                } catch(error) {
-
-                    commit('updateLogin', { data: null, error, loading: false })
+                    commit('updateLogin', {data, error: null, loading: false})
 
                     dispatch('checkToken')
 
-                    dispatch('checkName')
+                    await router.push({name: 'blog'})
 
-                    return { data: null, error }
+                    return {data, error: null}
+
+                } catch (error) {
+
+                    commit('updateLogin', {data: null, error, loading: false})
+
+                    dispatch('checkToken')
+
+                    return {data: null, error}
                 }
             })
         },
         REGISTER: async (
-            { commit, dispatch },
-            { name, email, password, password_confirmation  }
+            {commit, dispatch},
+            {name, email, password, password_confirmation}
         ) => {
-            axios.get('/sanctum/csrf-cookie').then(async () => {
-                commit('updateRegister', { data: null, error: null, loading: true })
-                try {
-                    const { data, status } = await axios.post('/register',
-                        { name , email , password, password_confirmation }
-                    )
 
-                     if (status >= 400) {
-                        throw new Error(data.message || "Что-то пошло не так")
-                    }
+            commit('updateRegister', {data: null, error: null, loading: true})
 
-                     localStorage.setItem('x_xsrf_token', JSON.stringify('rtqewrtsdfgdsfgsdgf|||asfsdf'))
+            try {
+                const {data, status} = await axios.post('/api/register',
+                    {name, email, password, password_confirmation}
+                )
 
-                     commit('updateRegister', { data, error: null, loading: false })
-
-                     dispatch('checkToken')
-
-                     dispatch('checkName')
-
-                     await router.push({name: 'all-blogs'})
-
-                    return { data, error: null }
-
-                } catch (error) {
-
-                    commit('updateRegister', { data: null, error, loading: false })
-
-                    dispatch('checkToken')
-
-                    dispatch('checkName')
-
-                    return { data:null, error }
+                if (status >= 400) {
+                    throw new Error(data.message || "Что-то пошло не так")
                 }
-            })
 
+                localStorage.setItem('x_xsrf_token', data.plainTextToken)
+
+                dispatch('checkToken')
+
+                commit('updateRegister', {data, error: null, loading: false})
+
+                await router.push({name: 'all-blogs'})
+
+                return {data, error: null}
+
+            } catch (error) {
+
+                commit('updateRegister', {data: null, error, loading: false})
+
+                return {data: null, error}
+            }
         },
     },
     mutations: {

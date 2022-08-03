@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::routes();
 
 Route::get('/{any}', [\App\Http\Controllers\IndexController::class, 'index'])
     ->where('any','.*')->name('index');

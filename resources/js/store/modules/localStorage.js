@@ -6,20 +6,19 @@ const moduleLocalStorage = {
         name: null
     },
     actions: {
-        checkToken: ({ commit }) => {
+        checkToken: ({ commit, dispatch }) => {
             const token = localStorage.getItem('x_xsrf_token')
 
             if (!token) {
                 return commit('updateToken', null)
             }
 
-            return commit('updateToken', token)
+            commit('updateToken', token)
+
+            return dispatch('checkName')
         },
 
         checkName: async ({ commit }) => {
-            const token = localStorage.getItem('x_xsrf_token')
-
-           if (token) {
 
                commit('updateName', {data: null, error: null, loading: true})
 
@@ -36,12 +35,10 @@ const moduleLocalStorage = {
                    return {data, error: null}
 
                } catch (error) {
-                   console.log(error)
 
                    commit('updateName', {data: null, error})
 
                    return {data: null, error}
-               }
            }
         }
     },

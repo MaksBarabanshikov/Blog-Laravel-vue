@@ -77,13 +77,10 @@ export default {
     methods: {
         ...mapActions([
            'LOGIN_USER',
-           'checkName',
            'checkToken'
         ]),
         onSubmit(values) {
             this.LOGIN_USER(values).then(() => {
-                this.checkToken()
-                this.checkName()
             })
         },
     },

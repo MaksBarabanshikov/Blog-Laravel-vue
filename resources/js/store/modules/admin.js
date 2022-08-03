@@ -42,6 +42,7 @@ const moduleAdminPost = {
                 commit('updateAdminPosts', {...data, error: null, loading: false})
 
                 return {...data, error: null}
+
             } catch (error) {
                 const {
                     data: { message },
