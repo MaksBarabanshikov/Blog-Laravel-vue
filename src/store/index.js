@@ -1,9 +1,16 @@
 import { createStore } from "vuex";
+import user from "@/store/modules/user";
+import admin from "@/store/modules/admin";
+import localStorage from "@/store/modules/localStorage";
 
 export default createStore({
   state: {},
-  getters: {},
   mutations: {},
   actions: {},
-  modules: {},
+  getters: {},
+  modules: {
+    user,
+    admin,
+    localStorage,
+  },
 });
