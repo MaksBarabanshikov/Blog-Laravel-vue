@@ -1,5 +1,5 @@
 import axios from "@/utils/axios";
-import router from "@/router/index";
+import router from "@/router";
 
 const modulePost = {
   state: {

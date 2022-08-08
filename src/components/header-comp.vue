@@ -10,14 +10,18 @@
         >
           Laravel 9 + Vue 3 Blog
         </router-link>
+        <router-link
+          to="/admin/login"
+          class="fs-4 d-flex align-items-center col-md-3 mb-2 mb-md-0 text-primary text-decoration-none"
+        >
+          Admin
+        </router-link>
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
           <li>
-            <router-link to="/home" class="nav-link px-2 link-secondary"
-              >Главная</router-link
-            >
+            <router-link to="/home" class="nav-link px-2">Главная</router-link>
           </li>
           <li>
-            <router-link to="/all-blogs" class="nav-link px-2 link-dark"
+            <router-link to="/all-blogs" class="nav-link px-2"
               >Все блоги</router-link
             >
           </li>
@@ -39,11 +43,7 @@
               Регистрация
             </button>
           </div>
-          <div
-            v-else-if="!!getName.data"
-            :key="getName"
-            class="d-flex align-items-center"
-          >
+          <div v-else-if="!!getName.data" class="d-flex align-items-center">
             <h5 class="mb-0">
               {{ getName.data.name }}
             </h5>
@@ -81,5 +81,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

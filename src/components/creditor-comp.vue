@@ -1,8 +1,8 @@
 <template>
   <ckeditor
     @input="inputListener"
-    :editor="editor"
     v-model="editorData"
+    :editor="editor"
     :config="editorConfig"
   />
   <div class="mt-4">
@@ -18,6 +18,7 @@
 <script>
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import UploadAdapter from "@/utils/upload-adapter";
+import CKEditor from "@ckeditor/ckeditor5-vue";
 
 export default {
   props: {
@@ -25,6 +26,9 @@ export default {
     default: null,
   },
   name: "CreditorComp",
+  components: {
+    ckeditor: CKEditor.component,
+  },
   data() {
     return {
       editor: ClassicEditor,
@@ -38,6 +42,7 @@ export default {
     if (this.content) {
       this.editorData = this.content;
     }
+
     console.log("Component mounted.");
   },
   methods: {

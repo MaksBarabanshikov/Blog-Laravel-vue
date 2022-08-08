@@ -1,14 +1,21 @@
 import axios from "axios";
 import router from "../router/index";
 const instance = axios.create({
-  baseURL: "http://127.1.0.1:8080",
+  baseURL: "http://example.localhost/",
   timeout: 1000,
-  headers: { "X-Requested-With": "XMLHttpRequest" },
+  headers: {
+    "Content-Type": "application/json",
+    "X-Requested-With": "XMLHttpRequest",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE",
+    "Access-Control-Allow-Headers":
+      "Origin, X-Requested-With, Content-Type, Accept",
+  },
   withCredentials: true,
 });
 
 instance.interceptors.request.use(function (config) {
-  const adminToken = localStorage.getItem("ADMIN_x_xsrf_token");
+  const adminToken = localStorage.getItem("adminToken");
   const token = localStorage.getItem("x_xsrf_token");
   if (adminToken) {
     config.headers.Authorization = `Bearer ${adminToken}`;

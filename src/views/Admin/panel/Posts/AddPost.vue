@@ -88,6 +88,7 @@ export default {
     ErrorMessage,
   },
   name: "AddPost",
+  emits: ["inputListener"],
   data: () => ({
     description: "",
     image: null,

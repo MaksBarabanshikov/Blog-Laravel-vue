@@ -1,4 +1,5 @@
 import axios from "@/utils/axios";
+import router from "@/router";
 
 const moduleAdminPost = {
   state: {
@@ -126,30 +127,32 @@ const moduleAdminPost = {
         .catch((e) => console.log(e));
     },
     LOGIN_ADMIN: async ({ commit }, { email, password }) => {
-      commit("updateLoginAdmin", { data: null, error: null, loading: true });
+      axios.get("/sanctum/csrf-cookie").then(async () => {
+        commit("updateLoginAdmin", { data: null, error: null, loading: true });
 
-      try {
-        axios.get("/sanctum/csrf-cookie").then(async () => {
+        try {
           const { data, status } = await axios.post("/admin/login", {
             email,
             password,
           });
 
-          console.log(data, status);
-
           if (status >= 400) {
             throw new Error(data.message || "Что-то пошло не так");
           }
 
+          localStorage.setItem("adminToken", data.token.plainTextToken);
+
           commit("updateLoginAdmin", { data, error: null, loading: false });
 
-          return { data, error: null };
-        });
-      } catch (error) {
-        commit("updateLoginAdmin", { data: null, error, loading: false });
+          await router.push({ name: "AdminStatistics" });
 
-        return { data: null, error };
-      }
+          return { data, error: null };
+        } catch (error) {
+          commit("updateLoginAdmin", { data: null, error, loading: false });
+
+          return { data: null, error };
+        }
+      });
     },
   },
   mutations: {
@@ -169,6 +172,7 @@ const moduleAdminPost = {
       state.post = payload;
     },
     updateLoginAdmin: (state, payload) => {
+      console.log(payload);
       state.loginAdmin = payload;
     },
   },

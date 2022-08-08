@@ -72,7 +72,6 @@ export default {
     ...mapGetters(["currentPost"]),
   },
   mounted() {
-    console.log(this.$route.params);
     this.GET_CURRENT_POST(this.$route.params);
   },
 };

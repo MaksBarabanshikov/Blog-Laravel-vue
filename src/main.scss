@@ -8,3 +8,20 @@
 main {
   flex: 1 1;
 }
+
+button {
+  .lds-ellipsis div{
+    top: 10px!important;
+  }
+}
+
+.nav-link {
+  color: #565e64 !important;
+
+  &.router-link-exact-active {
+    color: #212529!important;
+  }
+}
+
+.nav-link {
+}

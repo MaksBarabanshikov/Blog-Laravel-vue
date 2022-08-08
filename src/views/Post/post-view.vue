@@ -30,11 +30,11 @@
           />
         </div>
         <button class="btn btn-primary position-relative" type="submit">
-          <span>Оставить комментарий</span>
           <LoaderComp
             class="button-loader position-static"
             v-if="sendComment.loading"
           />
+          <span v-else>Оставить комментарий</span>
         </button>
       </Form>
     </div>
@@ -50,6 +50,7 @@ import { Field, Form, ErrorMessage, defineRule } from "vee-validate";
 import MessagePopup from "@/components/message-popup";
 import { mapActions, mapGetters } from "vuex";
 import LoaderComp from "@/components/loader-comp";
+import axios from "@/utils/axios";
 
 defineRule("required", (value) => {
   if (!value) {
@@ -99,10 +100,17 @@ export default {
   computed: {
     ...mapGetters(["sendComment"]),
   },
+  mounted() {
+    const { data, status } = axios.get(
+      `/api/posts/comment/${this.$route.params.id}`
+    );
+
+    console.log(data, status);
+  },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 h1 span {
   font-size: 14px;
 }
@@ -113,7 +121,11 @@ img {
 }
 
 .button-loader {
-  font-size: 20px !important;
+  height: 10px !important;
   margin: 0 0 5px 5px;
+
+  div {
+    top: 12px;
+  }
 }
 </style>
