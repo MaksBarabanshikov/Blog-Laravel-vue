@@ -126,26 +126,41 @@ const router = createRouter({
   routes,
 });
 
-// const listAuthRoutes = ["home", "posts"];
-// const listNotAuthRoutes = ["auth"];
-
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("x_xsrf_token");
-  const AdminToken = localStorage.getItem("ADMIN_x_xsrf_token");
+  const AdminToken = localStorage.getItem("adminToken");
+
+  const protectedRoutesUser = ["post", "all-blogs"];
+
+  const protectedRoutesAdmin = [
+    "AdminPanel",
+    "AdminPosts",
+    "AdminGetPosts",
+    "AddPost",
+    "EditPost",
+    "ViewPost",
+    "AdminUserLayout",
+    "AdminStatistics",
+    "AdminUsers",
+  ];
+
   if (!token) {
-    if (to.name === "post" || to.name === "all-blogs") {
-      return next({ name: "auth" });
-    }
+    protectedRoutesUser.map((route) => {
+      to.name === route ? next({ name: "auth" }) : null;
+    });
   }
 
-  // if (to.name === "auth") {
-  //     return next({name: 'blog'})
-  // }
+  if (to.name === "auth" && token) {
+    return next({ name: "blog" });
+  }
+
   if (!AdminToken) {
-    if (to.name === "AdminPanel") {
-      return next({ name: "AdminLogin" });
-    }
-  } else if (to.name === "AdminLogin" && AdminToken) {
+    protectedRoutesAdmin.map((route) => {
+      to.name === route ? next({ name: "AdminLogin" }) : null;
+    });
+  }
+
+  if (to.name === "AdminLogin" && AdminToken) {
     return next({ name: "AdminPanel" });
   }
 

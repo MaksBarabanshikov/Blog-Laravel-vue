@@ -9,8 +9,10 @@ const modulePost = {
     logoutUser: {},
     loginUser: {},
     registerUser: {},
+    getComments: {},
   },
   actions: {
+    //posts
     GET_POSTS_USER: async ({ commit }) => {
       commit("updatePosts", { posts: null, error: null, loading: true });
 
@@ -49,6 +51,7 @@ const modulePost = {
         return { data: null, error };
       }
     },
+    //comment
     SEND_COMMENT: async ({ commit }, { id, message }) => {
       commit("updateSendComment", { data: null, error: null, loading: true });
 
@@ -71,6 +74,30 @@ const modulePost = {
         return { data: null, error };
       }
     },
+    GET_COMMENT: async ({ commit }, { id }) => {
+      commit("updateGetComment", { data: null, error: null, loading: true });
+
+      try {
+        let url = `/api/posts/comment/${id}`;
+        if (router.currentRoute._value.name !== "post") {
+          url = `/admin/posts/comment/${id}`;
+        }
+
+        const { data, status } = await axios.get(url);
+
+        if (status >= 400) {
+          throw new Error(data.message || "Что-то пошло не так");
+        }
+
+        commit("updateGetComment", { ...data, error: null, loading: false });
+        return { ...data, error: null };
+      } catch (error) {
+        commit("updateGetComment", { data: null, error, loading: false });
+
+        return { data: null, error };
+      }
+    },
+    //Auth
     LOGOUT: async ({ commit, dispatch }) => {
       try {
         const { data, status } = await axios.post("/api/logout");
@@ -81,9 +108,9 @@ const modulePost = {
 
         commit("updateLogout", { data, error: null });
 
-        dispatch("checkToken");
-
         localStorage.removeItem("x_xsrf_token");
+
+        dispatch("checkToken");
 
         return { data, error: null };
       } catch (error) {
@@ -131,7 +158,6 @@ const modulePost = {
       { name, email, password, password_confirmation }
     ) => {
       commit("updateRegister", { data: null, error: null, loading: true });
-
       try {
         const { data, status } = await axios.post("/api/register", {
           name,
@@ -164,6 +190,7 @@ const modulePost = {
     updatePosts: (state, payload) => (state.posts = payload),
     updatePost: (state, payload) => (state.currentPost = payload),
     updateSendComment: (state, payload) => (state.sendComment = payload),
+    updateGetComment: (state, payload) => (state.getComments = payload),
     updateLogout: (state, payload) => (state.logoutUser = payload),
     updateLogin: (state, payload) => (state.loginUser = payload),
     updateRegister: (state, payload) => (state.registerUser = payload),
@@ -172,6 +199,7 @@ const modulePost = {
     allPosts: (state) => state.posts,
     currentPostUser: (state) => state.currentPost,
     sendComment: (state) => state.sendComment,
+    getComments: (state) => state.getComments,
     getLogout: (state) => state.logoutUser,
     getLoginUser: (state) => state.loginUser,
     getRegisterUser: (state) => state.registerUser,

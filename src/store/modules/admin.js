@@ -10,8 +10,10 @@ const moduleAdminPost = {
     putPost: {},
     users: [],
     loginAdmin: {},
+    statistics: {},
   },
   actions: {
+    //posts
     CREATE_POST: async ({ commit }, { newPost }) => {
       commit("updatePost", { data: null, error: null, loading: true });
 
@@ -101,6 +103,7 @@ const moduleAdminPost = {
         .then(() => dispatch("GET_ALL_POST"))
         .catch((e) => console.log(e));
     },
+    //users
     GET_ALL_USERS: async ({ commit }) => {
       commit("updateUsers", { data: null, error: null, loading: true });
 
@@ -126,6 +129,26 @@ const moduleAdminPost = {
         .then(() => dispatch("GET_ALL_USERS"))
         .catch((e) => console.log(e));
     },
+    //statistics
+    GET_STATISTICS: async ({ commit }) => {
+      commit("updateStatistics", { data: null, error: null, loading: true });
+      try {
+        const { data, status } = await axios.get("/admin/statistics");
+
+        if (status >= 400) {
+          throw new Error(data.message || "Что-то пошло не так");
+        }
+
+        commit("updateStatistics", { data, error: null, loading: false });
+
+        return { data, error: null };
+      } catch (error) {
+        commit("updateStatistics", { data: null, error, loading: false });
+
+        return { data: null, error };
+      }
+    },
+    //auth
     LOGIN_ADMIN: async ({ commit }, { email, password }) => {
       axios.get("/sanctum/csrf-cookie").then(async () => {
         commit("updateLoginAdmin", { data: null, error: null, loading: true });
@@ -154,6 +177,10 @@ const moduleAdminPost = {
         }
       });
     },
+    LOGOUT_ADMIN: async () => {
+      axios.post("/admin/logout").then(() => router.push({ name: "blog" }));
+      localStorage.removeItem("adminToken");
+    },
   },
   mutations: {
     updateAdminPosts: (state, payload) => {
@@ -165,15 +192,15 @@ const moduleAdminPost = {
     updatePutPost: (state, payload) => {
       state.putPost = payload;
     },
-    updatePost: (state, payload) => {
-      state.createPost = payload;
-    },
     updateCurrentPost: (state, payload) => {
       state.post = payload;
     },
     updateLoginAdmin: (state, payload) => {
-      console.log(payload);
       state.loginAdmin = payload;
+    },
+    updateStatistics: (state, payload) => {
+      console.log(123);
+      state.statistics = payload;
     },
   },
   getters: {
@@ -183,6 +210,7 @@ const moduleAdminPost = {
     allUsers: (state) => state.users,
     currentPost: (state) => state.post,
     loginAdmin: (state) => state.loginAdmin,
+    getStatistics: (state) => state.statistics,
   },
 };
 

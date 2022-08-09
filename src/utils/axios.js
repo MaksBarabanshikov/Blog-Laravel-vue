@@ -6,7 +6,6 @@ const instance = axios.create({
   headers: {
     "Content-Type": "application/json",
     "X-Requested-With": "XMLHttpRequest",
-    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE",
     "Access-Control-Allow-Headers":
       "Origin, X-Requested-With, Content-Type, Accept",
@@ -31,13 +30,15 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use({}, (err) => {
   if (err.response.status === 401 || err.response.status === 419) {
     const token = localStorage.getItem("x_xsrf_token");
-    const AdminToken = localStorage.getItem("ADMIN_x_xsrf_token");
+    const AdminToken = localStorage.getItem("adminToken");
+
     if (token) {
       localStorage.removeItem("x_xsrf_token");
-      router.push({ name: "auth" });
-    } else if (AdminToken) {
-      localStorage.removeItem("ADMIN_x_xsrf_token");
-      router.push({ name: "AdminLogin" });
+      return router.push({ name: "auth" });
+    }
+    if (AdminToken) {
+      localStorage.removeItem("adminToken");
+      return router.push({ name: "AdminLogin" });
     }
   }
 

@@ -36,13 +36,7 @@
           Оставить комментарий
         </button>
       </Form>
-      <CommentsView
-        v-if="currentPost.data.comments.length"
-        :comments="currentPost.data.comments"
-      />
-      <h2 v-else-if="!currentPost.data.comments.length" class="mt-5 text-info">
-        Комментарий нет
-      </h2>
+      <CommentsView />
     </div>
     <h1 class="text-danger" v-if="currentPost.error !== null">
       {{ currentPost.error }}

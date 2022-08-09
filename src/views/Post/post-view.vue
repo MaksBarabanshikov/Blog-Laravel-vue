@@ -38,19 +38,18 @@
         </button>
       </Form>
     </div>
-    <CommentsView v-if="comments.length" :comments="comments" />
-    <h2 v-else-if="!comments.length" class="my-5 text-info">Комментарий нет</h2>
+    <CommentsView />
   </section>
   <MessagePopup v-if="!!sendComment.error" :message="sendComment.error" />
 </template>
 
 <script>
+import { onUpdated, defineComponent } from "vue";
 import CommentsView from "./comments-view";
 import { Field, Form, ErrorMessage, defineRule } from "vee-validate";
 import MessagePopup from "@/components/message-popup";
 import { mapActions, mapGetters } from "vuex";
 import LoaderComp from "@/components/loader-comp";
-import axios from "@/utils/axios";
 
 defineRule("required", (value) => {
   if (!value) {
@@ -59,7 +58,12 @@ defineRule("required", (value) => {
   return true;
 });
 
-export default {
+export default defineComponent({
+  setup() {
+    onUpdated(() => {
+      console.log("render");
+    });
+  },
   props: {
     title: {
       type: String,
@@ -73,9 +77,6 @@ export default {
     description: {
       type: String,
     },
-    comments: {
-      type: Array,
-    },
   },
   name: "PostView",
   components: {
@@ -87,33 +88,27 @@ export default {
     CommentsView,
   },
   methods: {
-    ...mapActions(["SEND_COMMENT", "GET_POST_USER"]),
+    ...mapActions(["SEND_COMMENT", "GET_COMMENT", "GET_POST_USER"]),
     onSubmit(values) {
       this.SEND_COMMENT({
         id: this.$route.params,
         message: values.text,
       }).then(() => {
-        this.GET_POST_USER(this.$route.params);
+        this.GET_COMMENT(this.$route.params);
       });
     },
   },
   computed: {
-    ...mapGetters(["sendComment"]),
+    ...mapGetters(["sendComment", "getComments"]),
   },
-  mounted() {
-    const { data, status } = axios.get(
-      `/api/posts/comment/${this.$route.params.id}`
-    );
-
-    console.log(data, status);
-  },
-};
+});
 </script>
 
 <style lang="scss" scoped>
 h1 span {
   font-size: 14px;
 }
+
 img {
   margin: auto;
   max-width: 100%;

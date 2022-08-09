@@ -19,7 +19,7 @@
       </button>
       <div class="navbar-nav">
         <div class="nav-item text-nowrap">
-          <a @click.prevent="logout" class="nav-link px-3">Выйти</a>
+          <a @click.prevent="LOGOUT_ADMIN()" class="nav-link px-3">Выйти</a>
         </div>
       </div>
     </header>
@@ -112,27 +112,12 @@
 </template>
 
 <script>
-import axios from "@/utils/axios";
+import { mapActions } from "vuex";
 
 export default {
   name: "AdminPanel",
   methods: {
-    logout() {
-      axios.post("/admin/logout").then((res) => {
-        console.log(res);
-      });
-    },
+    ...mapActions(["LOGOUT_ADMIN"]),
   },
 };
 </script>
-
-<style scoped>
-.pointer {
-  cursor: pointer;
-}
-
-.active {
-  color: #0a53be;
-  font-weight: 700;
-}
-</style>
