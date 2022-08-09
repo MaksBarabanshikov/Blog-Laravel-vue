@@ -20,7 +20,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/register', [\App\Http\Controllers\Api\v1\AuthController::class, 'registration']);
 
     Route::group(['middleware' => 'auth:api'], function () {
-        Route::post('/logout', [\App\Http\Controllers\Api\v1\AuthController::class, 'logout']);
+        Route::post('/logout',  [\App\Http\Controllers\Api\v1\AuthController::class, 'logout']);
 
         Route::get('/user', function (Request $request) {
             return $request -> user();

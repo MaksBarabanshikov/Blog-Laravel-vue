@@ -23,7 +23,7 @@ class PostController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         $posts = Post::with(['comments.user'])->paginate(10);
 
