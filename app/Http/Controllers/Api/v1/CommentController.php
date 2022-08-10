@@ -22,7 +22,7 @@ class CommentController extends Controller
 
     public function getComments($id): AnonymousResourceCollection
     {
-        $comments = Comment::with('user')->where('post_id', $id) -> get();
+        $comments = Comment::with('user')->where('post_id', $id) -> paginate(10);
 
         return CommentResource::collection($comments);
     }
