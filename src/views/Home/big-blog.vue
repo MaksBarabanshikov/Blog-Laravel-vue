@@ -3,16 +3,23 @@
     <div class="container">
       <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
         <div class="col-md-6 px-0">
-          <h1 class="display-4 fst-italic">
-            Title of a longer featured blog post
+          <h1 class="display-4 my-1 fst-italic">
+            {{ post.title }}
           </h1>
-          <p class="lead my-3">
-            Multiple lines of text that form the lede, informing new readers
-            quickly and efficiently about what’s most interesting in this post’s
-            contents.
+          <p class="lead my-2">
+            {{ post.preview }}
           </p>
+
+          <strong class="d-block text-info my-2">
+            Коментирован {{ post.comments_count }} раз
+          </strong>
           <p class="lead mb-0">
-            <a href="#" class="text-white fw-bold">Continue reading...</a>
+            <router-link
+              :to="{ name: 'post', params: { id: post.id } }"
+              class="text-white fw-bold"
+            >
+              Continue reading...
+            </router-link>
           </p>
         </div>
       </div>
@@ -23,6 +30,11 @@
 <script>
 export default {
   name: "BigBlog",
+  props: {
+    post: {
+      type: Object,
+    },
+  },
 };
 </script>
 

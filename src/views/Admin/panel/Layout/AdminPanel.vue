@@ -19,7 +19,9 @@
       </button>
       <div class="navbar-nav">
         <div class="nav-item text-nowrap">
-          <a @click.prevent="LOGOUT_ADMIN()" class="nav-link px-3">Выйти</a>
+          <a @click.prevent="LOGOUT_ADMIN()" class="nav-link px-3 text-danger"
+            >Выйти</a
+          >
         </div>
       </div>
     </header>
@@ -121,3 +123,40 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.container-fluid {
+  height: 100vh;
+  max-height: 94vh;
+  padding-bottom: 0 !important;
+}
+
+.row {
+  height: 100%;
+}
+
+header {
+  .nav-link {
+    color: #dc3545 !important;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    &:after {
+      content: "";
+      position: absolute;
+      display: block;
+      height: 2px;
+      width: 0;
+      border-radius: 2px;
+      background-color: #dc3545;
+      transition: all 0.15s linear;
+    }
+
+    &:hover {
+      &:after {
+        width: 60px;
+      }
+    }
+  }
+}
+</style>

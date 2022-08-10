@@ -58,10 +58,13 @@
         type="submit"
       >
         <LoaderComp v-if="createPost.loading" />
-        <span v-if="!!createPost.error">{{ createPost.error }}</span>
-        <span v-if="!!!createPost.error">Добавить пост</span>
+        <span v-if="!createPost.loading">Добавить пост</span>
       </button>
     </Form>
+    <MessagePopup
+      v-if="!!createPost.error"
+      :message="createPost.error.message"
+    />
   </div>
 </template>
 
@@ -70,6 +73,7 @@ import { Form, Field, ErrorMessage, defineRule } from "vee-validate";
 import LoaderComp from "@/components/loader-comp";
 import CreditorComp from "@/components/creditor-comp";
 import { mapActions, mapGetters } from "vuex";
+import MessagePopup from "@/components/message-popup";
 
 defineRule("required", (value) => {
   if (!value) {
@@ -81,6 +85,7 @@ defineRule("required", (value) => {
 
 export default {
   components: {
+    MessagePopup,
     CreditorComp,
     LoaderComp,
     Form,
@@ -90,7 +95,7 @@ export default {
   name: "AddPost",
   emits: ["inputListener"],
   data: () => ({
-    description: "",
+    description: "<p>123123123</p>",
     image: null,
   }),
   computed: {

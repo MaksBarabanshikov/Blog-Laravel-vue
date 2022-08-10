@@ -1,13 +1,12 @@
 <template>
-  <div class="col-3">
+  <div class="all-block-card col-3">
     <div
       class="row g-0 border rounded overflow-hidden flex-column shadow-sm position-relative"
     >
       <div class="col-auto d-none d-lg-block">
-        <img :src="thumbnail" alt="" />
+        <img :src="thumbnail" alt="изображение" />
       </div>
       <div class="col p-4 m-0 d-flex flex-column position-static">
-        <strong class="d-inline-block mb-2 text-primary">World</strong>
         <h3 class="mb-0 text-nowrap overflow-hidden">{{ title }}</h3>
         <div class="mb-1 text-success">
           {{ new Date(date).toLocaleString() }}
@@ -53,7 +52,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 * {
   text-overflow: ellipsis;
 }
@@ -61,5 +60,13 @@ export default {
 img {
   max-height: 200px;
   width: 100%;
+}
+
+.all-block-card {
+  transition: all 0.15s linear;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 </style>

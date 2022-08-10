@@ -5,6 +5,7 @@ const modulePost = {
   state: {
     posts: {},
     currentPost: {},
+    mostCommented: {},
     sendComment: {},
     logoutUser: {},
     loginUser: {},
@@ -13,11 +14,13 @@ const modulePost = {
   },
   actions: {
     //posts
-    GET_POSTS_USER: async ({ commit }) => {
+    GET_POSTS_USER: async ({ commit }, { page }) => {
       commit("updatePosts", { posts: null, error: null, loading: true });
 
       try {
-        const { data, status } = await axios.get("/api/blog/posts");
+        const { data, status } = await axios.get(
+          `/api/blog/posts?page=` + page
+        );
 
         if (status >= 400) {
           throw new Error(data.message || "что-то пошло не так");
@@ -51,6 +54,33 @@ const modulePost = {
         return { data: null, error };
       }
     },
+    GET_MOST_COMMENTED: async ({ commit }) => {
+      commit("updateMostCommented", { data: null, error: null, loading: true });
+
+      try {
+        const { data, status } = await axios.get(`/api/most-commented`);
+
+        if (status >= 400) {
+          throw new Error(data.message || "Что-то пошло не так");
+        }
+
+        const bigPost = data[0];
+
+        const posts = data.slice(1);
+
+        commit("updateMostCommented", {
+          data: { bigPost, posts },
+          error: null,
+          loading: false,
+        });
+
+        return { data, error: null };
+      } catch (error) {
+        commit("updateMostCommented", { data: null, error, loading: false });
+
+        return { data: null, error };
+      }
+    },
     //comment
     SEND_COMMENT: async ({ commit }, { id, message }) => {
       commit("updateSendComment", { data: null, error: null, loading: true });
@@ -74,13 +104,15 @@ const modulePost = {
         return { data: null, error };
       }
     },
-    GET_COMMENT: async ({ commit }, { id }) => {
+    GET_COMMENT: async ({ commit }, { id, page }) => {
       commit("updateGetComment", { data: null, error: null, loading: true });
 
+      console.log(id);
+
       try {
-        let url = `/api/posts/comment/${id}`;
+        let url = `/api/posts/comment/${id}?page=` + page;
         if (router.currentRoute._value.name !== "post") {
-          url = `/admin/posts/comment/${id}`;
+          url = `/admin/posts/comment/${id}?page=` + page;
         }
 
         const { data, status } = await axios.get(url);
@@ -137,6 +169,8 @@ const modulePost = {
 
           await localStorage.setItem("x_xsrf_token", data.plainTextToken);
 
+          await localStorage.removeItem("adminToken");
+
           commit("updateLogin", { data, error: null, loading: false });
 
           dispatch("checkToken");
@@ -189,6 +223,7 @@ const modulePost = {
   mutations: {
     updatePosts: (state, payload) => (state.posts = payload),
     updatePost: (state, payload) => (state.currentPost = payload),
+    updateMostCommented: (state, payload) => (state.mostCommented = payload),
     updateSendComment: (state, payload) => (state.sendComment = payload),
     updateGetComment: (state, payload) => (state.getComments = payload),
     updateLogout: (state, payload) => (state.logoutUser = payload),
@@ -198,6 +233,7 @@ const modulePost = {
   getters: {
     allPosts: (state) => state.posts,
     currentPostUser: (state) => state.currentPost,
+    mostCommented: (state) => state.mostCommented,
     sendComment: (state) => state.sendComment,
     getComments: (state) => state.getComments,
     getLogout: (state) => state.logoutUser,

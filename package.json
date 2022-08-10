@@ -13,6 +13,7 @@
     "@ckeditor/ckeditor5-vue": "^4.0.1",
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
+    "laravel-vue-pagination": "^3.0.0",
     "vee-validate": "^4.5.11",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",

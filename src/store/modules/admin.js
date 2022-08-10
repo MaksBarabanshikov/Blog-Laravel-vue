@@ -15,7 +15,7 @@ const moduleAdminPost = {
   actions: {
     //posts
     CREATE_POST: async ({ commit }, { newPost }) => {
-      commit("updatePost", { data: null, error: null, loading: true });
+      commit("updateCreatePost", { data: null, error: null, loading: true });
 
       try {
         const { data, status } = await axios.post(
@@ -27,37 +27,36 @@ const moduleAdminPost = {
           throw new Error(data.message || "Что-то пошло не так");
         }
 
-        commit("updatePost", { data, error: null, loading: false });
+        commit("updateCreatePost", { data, error: null, loading: false });
+
+        await router.push({ name: "AdminPosts" });
 
         return { ...data, error: null };
       } catch (error) {
-        commit("updatePost", { data: null, error, loading: false });
+        commit("updateCreatePost", { data: null, error, loading: false });
 
         return { data: null, error };
       }
     },
-    GET_ALL_POST: async ({ commit }) => {
+    GET_ALL_POST: async ({ commit }, { page }) => {
       commit("updateAdminPosts", { data: null, error: null, loading: true });
 
       try {
-        const { data } = await axios.get("/admin/admin-posts");
+        const { data, status } = await axios.get(
+          `/admin/admin-posts?page=` + page
+        );
+
+        if (status >= 400) {
+          throw new Error(data.message || "Что-то пошло не так");
+        }
 
         commit("updateAdminPosts", { ...data, error: null, loading: false });
 
         return { ...data, error: null };
       } catch (error) {
-        const {
-          data: { message },
-          status,
-        } = error.response;
+        commit("updateAdminPosts", { data: null, error, loading: false });
 
-        commit("updateAdminPosts", {
-          data: null,
-          error: { message, status },
-          loading: false,
-        });
-
-        return { data: null, error: { message, status } };
+        return { data: null, error };
       }
     },
     GET_CURRENT_POST: async ({ commit }, { id }) => {
@@ -89,6 +88,8 @@ const moduleAdminPost = {
         }
 
         commit("updatePutPost", { data, error: null, loading: false });
+
+        await router.push({ name: "AdminPosts" });
 
         return { data, error: null };
       } catch (error) {
@@ -165,6 +166,8 @@ const moduleAdminPost = {
 
           localStorage.setItem("adminToken", data.token.plainTextToken);
 
+          localStorage.removeItem("x_xsrf_token");
+
           commit("updateLoginAdmin", { data, error: null, loading: false });
 
           await router.push({ name: "AdminStatistics" });
@@ -189,6 +192,9 @@ const moduleAdminPost = {
     updateUsers: (state, payload) => {
       state.users = payload;
     },
+    updateCreatePost: (state, payload) => {
+      state.createPost = payload;
+    },
     updatePutPost: (state, payload) => {
       state.putPost = payload;
     },
@@ -199,7 +205,6 @@ const moduleAdminPost = {
       state.loginAdmin = payload;
     },
     updateStatistics: (state, payload) => {
-      console.log(123);
       state.statistics = payload;
     },
   },

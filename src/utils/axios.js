@@ -32,13 +32,14 @@ instance.interceptors.response.use({}, (err) => {
     const token = localStorage.getItem("x_xsrf_token");
     const AdminToken = localStorage.getItem("adminToken");
 
-    if (token) {
-      localStorage.removeItem("x_xsrf_token");
-      return router.push({ name: "auth" });
-    }
     if (AdminToken) {
       localStorage.removeItem("adminToken");
       return router.push({ name: "AdminLogin" });
+    }
+
+    if (token) {
+      localStorage.removeItem("x_xsrf_token");
+      return router.push({ name: "auth" });
     }
   }
 

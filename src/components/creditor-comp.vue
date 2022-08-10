@@ -1,20 +1,3 @@
-<template>
-  <ckeditor
-    @input="inputListener"
-    v-model="editorData"
-    :editor="editor"
-    :config="editorConfig"
-  />
-  <div class="mt-4">
-    <button class="btn btn-success me-3" @click="sendEditorData()">
-      Результат
-    </button>
-    <button class="btn btn-danger" @click="emptyEditor()">Очистить</button>
-  </div>
-
-  <div id="resultingText"></div>
-</template>
-
 <script>
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import UploadAdapter from "@/utils/upload-adapter";
@@ -27,12 +10,12 @@ export default {
   },
   name: "CreditorComp",
   components: {
-    ckeditor: CKEditor.component,
+    ckeditor: CKEditor,
   },
   data() {
     return {
       editor: ClassicEditor,
-      editorData: "",
+      editorData: "<p>123123</p>",
       editorConfig: {
         extraPlugins: [this.uploader],
       },
@@ -76,4 +59,19 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<template>
+  <ckeditor
+    @input="inputListener"
+    v-model="editorData"
+    :editor="editor"
+    :config="editorConfig"
+  />
+  <div class="mt-4">
+    <button class="btn btn-success me-3" @click="sendEditorData()">
+      Результат
+    </button>
+    <button class="btn btn-danger" @click="emptyEditor()">Очистить</button>
+  </div>
+
+  <div id="resultingText"></div>
+</template>

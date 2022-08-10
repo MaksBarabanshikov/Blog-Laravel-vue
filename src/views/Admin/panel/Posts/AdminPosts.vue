@@ -19,21 +19,24 @@
       </div>
     </div>
     <Loader v-if="getPostsAdmin.loading" />
-    <div
-      v-else-if="!!getPostsAdmin.data && getPostsAdmin.loading === false"
-      class="admin-panel__posts"
-      :class="activeView"
-    >
-      <AdminPostEl
-        v-for="post in getPostsAdmin.data"
-        :key="post.id"
-        :id="post.id"
-        :title="post.title"
-        :thumbnail="post.thumbnail"
-        :preview="post.preview"
-        :date="post.created_at"
-        :comments="post.comments.length"
-        :typeBlock="activeView"
+    <div v-else-if="!!getPostsAdmin.data && getPostsAdmin.loading === false">
+      <div class="admin-panel__posts" :class="activeView">
+        <AdminPostEl
+          v-for="post in getPostsAdmin.data"
+          :key="post.id"
+          :id="post.id"
+          :title="post.title"
+          :thumbnail="post.thumbnail"
+          :preview="post.preview"
+          :date="post.created_at"
+          :comments="post.comments.length"
+          :typeBlock="activeView"
+        />
+      </div>
+      <pagination-comp
+        class="my-3"
+        :data="getPostsAdmin"
+        @pagination-change-page="getPosts"
       />
     </div>
   </section>
@@ -43,24 +46,27 @@
 import AdminPostEl from "./AdminPostEl";
 import { mapActions, mapGetters } from "vuex";
 import Loader from "../../../../components/loader-comp";
+import PaginationComp from "@/components/pagination-comp";
+import store from "@/store";
 
 export default {
   name: "AdminPosts",
-  components: { Loader, AdminPostEl },
+  components: { PaginationComp, Loader, AdminPostEl },
   data: () => ({
     activeView: "tile",
   }),
   methods: {
     ...mapActions(["GET_ALL_POST"]),
-    changeActive(value) {
+    changeActive: (value) => {
       this.activeView = value;
     },
+    getPosts: (page) => store.dispatch("GET_ALL_POST", { page }),
   },
   computed: {
     ...mapGetters(["getPostsAdmin"]),
   },
   mounted() {
-    this.GET_ALL_POST();
+    this.GET_ALL_POST({ page: 1 });
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="form-alert alert alert-danger position-absolute m-0" role="alert">
+  <div class="form-alert alert alert-danger position-fixed m-0" role="alert">
     {{ message }}
   </div>
 </template>

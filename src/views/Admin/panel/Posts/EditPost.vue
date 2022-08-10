@@ -81,7 +81,7 @@ export default {
   name: "EditPost",
   emits: ["inputListener"],
   data: () => ({
-    description: "",
+    description: "<ul><li>CKEditor not working</li><li>123</li></ul>",
     image: null,
   }),
   components: {
