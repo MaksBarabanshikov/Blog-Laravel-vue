@@ -1,7 +1,6 @@
 <script>
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { ref, defineAsyncComponent } from "vue";
 import UploadAdapter from "@/utils/upload-adapter";
-import CKEditor from "@ckeditor/ckeditor5-vue";
 
 export default {
   props: {
@@ -10,11 +9,26 @@ export default {
   },
   name: "CreditorComp",
   components: {
-    ckeditor: CKEditor,
+    ckeditor: defineAsyncComponent(() => {
+      return import("@ckeditor/ckeditor5-vue").then(
+        (module) => module.component
+      );
+    }),
+  },
+  setup() {
+    const IsBrowser = typeof window !== "undefined";
+    let CKEditorClassic = ref(null);
+
+    if (IsBrowser) {
+      import("@ckeditor/ckeditor5-build-classic").then(
+        (e) => (CKEditorClassic.value = e.default)
+      );
+    }
+
+    return { IsBrowser, CKEditorClassic };
   },
   data() {
     return {
-      editor: ClassicEditor,
       editorData: "<p>123123</p>",
       editorConfig: {
         extraPlugins: [this.uploader],
@@ -63,7 +77,7 @@ export default {
   <ckeditor
     @input="inputListener"
     v-model="editorData"
-    :editor="editor"
+    :editor="CKEditorClassic"
     :config="editorConfig"
   />
   <div class="mt-4">

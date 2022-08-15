@@ -47,14 +47,14 @@ export default {
   },
   methods: {
     ...mapActions(["GET_COMMENT"]),
+  },
+  computed: {
+    ...mapGetters(["getComments"]),
     getCommentsPage: (page) =>
       store.dispatch("GET_COMMENT", {
         id: router.currentRoute._value.params.id,
         page,
       }),
-  },
-  computed: {
-    ...mapGetters(["getComments"]),
   },
   mounted() {
     this.GET_COMMENT({ id: router.currentRoute._value.params.id, page: 1 });
