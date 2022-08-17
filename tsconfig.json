@@ -12,7 +12,7 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-    "types": ["node", "vite/cli"],
+    "types": ["node", "vite/cli", "pinia-plugin-persist"],
     "paths": {
       "@/*": ["./src/*"]
     }

@@ -1,7 +1,47 @@
-/* eslint vue/no-reserved-component-names: 0 */
+<script setup lang="ts">
+import LoaderComp from "@/components/loader-comp.vue";
+import MessagePopup from "@/components/message-popup.vue";
+import { toFormValidator } from "@vee-validate/zod";
+import { object, string } from "zod";
+import { ILogin } from "@/types/auth";
+import { useMutation } from "vue-query";
+import { AuthService } from "@/lib/services/auth.service";
+import { useRouter } from "vue-router";
+import { ITokenResponse } from "@/types/api";
+import { useAuth } from "@/lib/stores/auth.store";
+
+const router = useRouter();
+const authStore = useAuth();
+
+const validationSchema = toFormValidator(
+  object({
+    email: string()
+      .nonempty("Обязательное поле")
+      .email({ message: "Некорректная почта" }),
+    password: string()
+      .nonempty("Обязательное поле")
+      .min(5, { message: "Не менее 5 символов" }),
+  })
+);
+
+const afterSuccessLogin = (data: ITokenResponse) => {
+  authStore.setToken(data.plainTextToken);
+  router.push({ name: "blog" });
+};
+
+const { isLoading, mutate, error, isError } = useMutation(
+  (credentials: ILogin) => AuthService.loginUser(credentials),
+  {
+    onSuccess: ({ data }) => afterSuccessLogin(data),
+  }
+);
+
+const onSubmit = (values: ILogin) => mutate(values);
+</script>
+
 <template>
   <div class="form-signin w-100 m-auto">
-    <Form>
+    <Form :validation-schema="validationSchema" @submit="onSubmit">
       <h1 class="h3 mb-3 fw-normal">Авторизация</h1>
 
       <div class="form-floating">
@@ -38,40 +78,20 @@
       <button
         class="w-100 btn btn-lg btn-primary mb-2 position-relative"
         type="submit"
+        :disabled="isLoading"
       >
-        <span>Войти</span>
+        <LoaderComp v-if="isLoading" class="spin" />
+        <span v-else>Войти</span>
       </button>
       <router-link to="/reg" type="submit"> Регистрация </router-link>
       <p class="mt-3 mb-3 text-muted">© Maksim Barabanshikov</p>
     </Form>
   </div>
+  <MessagePopup v-if="isError" :message="error.message" />
 </template>
-<script setup lang="ts">
-import { Form, Field, ErrorMessage } from "vee-validate";
 
-// defineRule("email", (value) => {
-//   // if the field is not a valid email
-//   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-//   if (!regex.test(value)) {
-//     return "Такая почта не действительна";
-//   }
-//   // All is good
-//   return true;
-// });
-// defineRule("required", (value) => {
-//   if (!value) {
-//     return "Обязательное поле";
-//   }
-//
-//   return true;
-// });
-// defineRule("min", (value, [min]) => {
-//   if (value && value.length < min) {
-//     return `Пароль должен содержать не менее ${min} символов  `;
-//   }
-//
-//   return true;
-// });
+<script lang="ts">
+import { Form, Field, ErrorMessage } from "vee-validate";
 
 export default {
   name: "AuthUser",

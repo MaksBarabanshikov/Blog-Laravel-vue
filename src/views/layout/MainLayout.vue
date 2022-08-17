@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import HeaderComp from "@/components/header-comp.vue";
+import HeaderComp from "@/components/header/header-comp.vue";
 import FooterComp from "@/components/footer-comp.vue";
 
 export default {

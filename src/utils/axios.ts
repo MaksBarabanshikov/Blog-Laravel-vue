@@ -28,10 +28,10 @@ instance.interceptors.request.use(function (config: AxiosRequestConfig) {
   return config;
 });
 
-// @ts-ignore
-instance.interceptors.response.use({}, (err) => {
+instance.interceptors.response.use(undefined, (err) => {
+  const errorMessage = err.request.response;
   if (err.response.status === 401 || err.response.status === 419) {
-    const token = localStorage.getItem("x_xsrf_token");
+    const token = localStorage.getItem("token");
     const AdminToken = localStorage.getItem("adminToken");
 
     if (AdminToken) {
@@ -40,10 +40,12 @@ instance.interceptors.response.use({}, (err) => {
     }
 
     if (token) {
-      localStorage.removeItem("x_xsrf_token");
+      localStorage.removeItem("token");
       return router.push({ name: "auth" });
     }
   }
+
+  return Promise.reject(JSON.parse(errorMessage));
 });
 
 export default instance;

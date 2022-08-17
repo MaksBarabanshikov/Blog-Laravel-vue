@@ -16,6 +16,7 @@ module.exports = {
     "plugin:vue/vue3-recommended",
     "prettier",
   ],
+  parser: "vue-eslint-parser",
   parserOptions: {
     ecmaVersion: 2022,
   },
