@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { useAuthStore } from "@/lib/stores/auth.store";
 import router from "@/lib/router";
 
 const instance = axios.create({
@@ -15,8 +16,11 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(function (config: AxiosRequestConfig) {
-  const adminToken = localStorage.getItem("adminToken");
-  const token = localStorage.getItem("x_xsrf_token");
+  const authStore = useAuthStore();
+
+  const adminToken = authStore.adminToken;
+  const token = authStore.token;
+
   if (adminToken) {
     config.headers!.Authorization = `Bearer ${adminToken}`;
   }
@@ -28,24 +32,34 @@ instance.interceptors.request.use(function (config: AxiosRequestConfig) {
   return config;
 });
 
-instance.interceptors.response.use(undefined, (err) => {
-  const errorMessage = err.request.response;
-  if (err.response.status === 401 || err.response.status === 419) {
-    const token = localStorage.getItem("token");
-    const AdminToken = localStorage.getItem("adminToken");
+instance.interceptors.response.use(
+  (res) => {
+    const { data } = res;
+    console.log(data);
+    return { ...data };
+  },
+  (err) => {
+    const errorMessage = err.request.response;
 
-    if (AdminToken) {
-      localStorage.removeItem("adminToken");
-      return router.push({ name: "AdminLogin" });
+    const authStore = useAuthStore();
+
+    if (err.response.status === 401 || err.response.status === 419) {
+      const adminToken = authStore.adminToken;
+      const token = authStore.token;
+
+      if (adminToken) {
+        authStore.logoutAdmin();
+        return router.push({ name: "AdminLogin" });
+      }
+
+      if (token) {
+        authStore.logout();
+        return router.push({ name: "auth" });
+      }
     }
 
-    if (token) {
-      localStorage.removeItem("token");
-      return router.push({ name: "auth" });
-    }
+    return Promise.reject(JSON.parse(errorMessage));
   }
-
-  return Promise.reject(JSON.parse(errorMessage));
-});
+);
 
 export default instance;

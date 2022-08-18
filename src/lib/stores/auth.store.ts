@@ -5,7 +5,7 @@ export type AuthStore = {
   adminToken: string | null;
 };
 
-export const useAuth = defineStore("auth-store", {
+export const useAuthStore = defineStore("auth-store", {
   state: () =>
     ({
       token: null,
@@ -17,6 +17,12 @@ export const useAuth = defineStore("auth-store", {
     },
     setTokenAdmin(token: string) {
       this.adminToken = token;
+    },
+    logout() {
+      this.token = null;
+    },
+    logoutAdmin() {
+      this.adminToken = null;
     },
   },
   persist: {

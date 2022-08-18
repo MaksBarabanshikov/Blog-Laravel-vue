@@ -8,10 +8,10 @@ import { useMutation } from "vue-query";
 import { AuthService } from "@/lib/services/auth.service";
 import { useRouter } from "vue-router";
 import { ITokenResponse } from "@/types/api";
-import { useAuth } from "@/lib/stores/auth.store";
+import { useAuthStore } from "@/lib/stores/auth.store";
 
 const router = useRouter();
-const authStore = useAuth();
+const authStore = useAuthStore();
 
 const validationSchema = toFormValidator(
   object({
@@ -30,9 +30,9 @@ const afterSuccessLogin = (data: ITokenResponse) => {
 };
 
 const { isLoading, mutate, error, isError } = useMutation(
-  (credentials: ILogin) => AuthService.loginUser(credentials),
+  (credentials: ILogin) => AuthService.loginUser(credentials), // TODO поправить
   {
-    onSuccess: ({ data }) => afterSuccessLogin(data),
+    onSuccess: (data: ITokenResponse) => afterSuccessLogin(data),
   }
 );
 

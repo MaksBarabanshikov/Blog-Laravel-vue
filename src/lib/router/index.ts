@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home/home-view.vue";
-import FooterComp from "@/components/footer-comp.vue";
+import AllBlogs from "@/views/All-Blogs/AllBlogs.vue";
 import AuthUser from "@/views/Auth/auth-user.vue";
+import RegisterUser from "@/views/Auth/register-user.vue";
+import PostLayout from "@/views/Post/post-view.vue";
+import { useAuthStore } from "@/lib/stores/auth.store";
 
 const routes = [
   {
@@ -11,11 +14,6 @@ const routes = [
       import(
         /* webpackChunkName: "welcome" */ "@/views/WelcomePage/WelcomePage.vue"
       ),
-  },
-  {
-    path: "/footer",
-    name: "footer",
-    component: FooterComp,
   },
   {
     path: "/home",
@@ -29,9 +27,24 @@ const routes = [
         component: Home,
       },
       {
+        path: "/all-blogs",
+        name: "all-blogs",
+        component: AllBlogs,
+      },
+      {
+        path: "/post/:id",
+        name: "post",
+        component: PostLayout,
+      },
+      {
         path: "/auth",
         name: "auth",
         component: AuthUser,
+      },
+      {
+        path: "/reg",
+        name: "reg",
+        component: RegisterUser,
       },
     ],
   },
@@ -43,8 +56,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem("x_xsrf_token");
-  const AdminToken = localStorage.getItem("adminToken");
+  const authStore = useAuthStore();
+
+  const token = authStore.token;
+  const AdminToken = authStore.adminToken;
 
   const protectedRoutesUser = ["post", "all-blogs"];
 
