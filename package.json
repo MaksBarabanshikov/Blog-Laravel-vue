@@ -10,8 +10,7 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
     "format": "prettier .  --write",
     "prepare": "husky install",
-    "test": "lint-staged",
-    "pre-commit": "prettier .  --write"
+    "pre-commit": "lint-staged"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^34.2.0",
