@@ -1,3 +1,13 @@
+<script setup lang="ts">
+interface Props {
+  text: string;
+  date: string;
+  name: string;
+}
+
+defineProps<Props>();
+</script>
+
 <template>
   <div class="d-flex text-muted border-bottom align-items-center py-3">
     <svg
@@ -25,20 +35,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "CommentItems",
-  props: {
-    text: {
-      type: String,
-    },
-    date: {
-      type: String,
-    },
-    name: {
-      type: String,
-    },
-  },
 };
 </script>
 

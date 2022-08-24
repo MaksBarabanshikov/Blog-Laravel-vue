@@ -5,3 +5,7 @@ declare module "*.vue" {
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }
+
+declare module '@ckeditor/ckeditor5-editor-classic'
+
+declare module '@ckeditor/ckeditor5-vue'

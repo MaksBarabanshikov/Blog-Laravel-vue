@@ -4,7 +4,6 @@ import router from "@/lib/router";
 
 const instance = axios.create({
   baseURL: "http://example.localhost/",
-  timeout: 1000,
   headers: {
     "Content-Type": "application/json",
     "X-Requested-With": "XMLHttpRequest",
@@ -35,7 +34,6 @@ instance.interceptors.request.use(function (config: AxiosRequestConfig) {
 instance.interceptors.response.use(
   (res) => {
     const { data } = res;
-    console.log(data);
     return { ...data };
   },
   (err) => {

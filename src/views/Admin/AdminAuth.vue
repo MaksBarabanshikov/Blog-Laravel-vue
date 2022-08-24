@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
+import LoaderComp from "@/components/loader-comp.vue";
 import { validationLogin } from "@/helper/schemas";
+import { useLoginAdminMutation } from "@/lib/services/auth.service";
 import { ILogin } from "@/types/auth";
-import { useLoginUserMutation } from "@/lib/services/auth.service";
 
-const { isLoading, mutate, error, isError } = useLoginUserMutation();
+const { isLoading, isError, error, mutate } = useLoginAdminMutation();
 
 const onSubmit = (values: ILogin) => mutate(values);
 </script>
@@ -13,12 +13,10 @@ const onSubmit = (values: ILogin) => mutate(values);
 <template>
   <div class="form-signin w-100 m-auto">
     <Form :validation-schema="validationLogin" @submit="onSubmit">
-      <h1 class="h3 mb-3 fw-normal">Авторизация</h1>
-
+      <h1 class="h3 mb-3 fw-normal">Admin Авторизация</h1>
       <div class="form-floating">
         <Field
           id="floatingInput"
-          rules="required|email"
           name="email"
           type="email"
           class="form-control"
@@ -33,7 +31,6 @@ const onSubmit = (values: ILogin) => mutate(values);
       <div class="form-floating">
         <Field
           id="floatingPassword"
-          rules="required|min:5"
           name="password"
           type="password"
           class="form-control"
@@ -54,18 +51,18 @@ const onSubmit = (values: ILogin) => mutate(values);
         <LoaderComp v-if="isLoading" class="spin" />
         <span v-else>Войти</span>
       </button>
-      <router-link to="/reg" type="submit"> Регистрация </router-link>
       <p class="mt-3 mb-3 text-muted">© Maksim Barabanshikov</p>
     </Form>
   </div>
+
   <MessagePopup v-if="isError" :message="error.message" />
 </template>
 
 <script lang="ts">
-import { Form, Field, ErrorMessage } from "vee-validate";
+import { ErrorMessage, Field, Form } from "vee-validate";
 
 export default {
-  name: "AuthUser",
+  name: "AdminAuth",
   components: {
     Form,
     Field,

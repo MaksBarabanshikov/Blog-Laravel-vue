@@ -1,19 +1,13 @@
 <script setup lang="ts">
 import { useAuthStore } from "@/lib/stores/auth.store";
-import { AuthService } from "@/lib/services/auth.service";
-import { useMutation } from "vue-query/esm";
+import { useLogoutUserMutation } from "@/lib/services/auth.service";
 import MessagePopup from "@/components/message-popup.vue";
 import LoaderComp from "@/components/loader-comp.vue";
 import HeaderName from "@/components/header/header-name.vue";
 
 const authStore = useAuthStore();
 
-const { isLoading, mutate, error, isError } = useMutation(
-  () => AuthService.logoutUser(),
-  {
-    onSuccess: () => authStore.logout(),
-  }
-);
+const { isLoading, mutate, error, isError } = useLogoutUserMutation();
 </script>
 
 <template>

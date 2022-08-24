@@ -3,13 +3,11 @@ import BlogCard from "@/components/blog-card.vue";
 import MessagePopup from "@/components/message-popup.vue";
 import PaginationComp from "@/components/pagination-comp.vue";
 import LoaderComp from "@/components/loader-comp.vue";
-import { PostService } from "@/lib/services/post.service";
-import { useMutation } from "vue-query";
+import { useGetPostsMutation } from "@/lib/services/post.service";
 import { onMounted } from "vue";
 
-const { isLoading, error, isError, isSuccess, data, mutate } = useMutation(
-  (page: number) => PostService.allPosts(page)
-);
+const { isLoading, error, isError, isSuccess, data, mutate } =
+  useGetPostsMutation();
 
 onMounted(() => mutate(1));
 
@@ -22,7 +20,7 @@ onMounted(() => mutate(1));
     <div v-if="isSuccess">
       <div class="row mb-5 g-3">
         <BlogCard
-          v-for="post in data"
+          v-for="post in data.data"
           :id="post.id"
           :key="post.id"
           :thumbnail="post.thumbnail"

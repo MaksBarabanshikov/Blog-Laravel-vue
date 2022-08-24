@@ -27,6 +27,7 @@
     "zod": "^3.10.0-beta.1"
   },
   "devDependencies": {
+    "@types/ckeditor__ckeditor5-editor-classic": "^27.1.2",
     "@types/node": "^18.7.6",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",

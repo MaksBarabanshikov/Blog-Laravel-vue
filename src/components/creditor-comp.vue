@@ -1,9 +1,28 @@
+<template>
+  <ckeditor
+    v-model="editorData"
+    :editor="editor"
+    :config="editorConfig"
+    @input="inputListener"
+  />
+  <div class="mt-4">
+    <button class="btn btn-danger" @click.prevent="emptyEditor()">
+      Очистить
+    </button>
+  </div>
+</template>
+
 <script>
-import { ref, defineAsyncComponent } from "vue";
-import UploadAdapter from "@/utils/upload-adapter";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { defineAsyncComponent } from "vue";
 
 export default {
   name: "CreditorComp",
+  props: {
+    content: String,
+    default: null,
+  },
+  emits: ["inputListener"],
   components: {
     ckeditor: defineAsyncComponent(() => {
       return import("@ckeditor/ckeditor5-vue").then(
@@ -11,40 +30,17 @@ export default {
       );
     }),
   },
-  props: {
-    content: {
-      type: String,
-      required: true,
-      default: "",
-    },
-  },
-  emits: ["inputListener", "editorData"],
-  setup() {
-    const IsBrowser = typeof window !== "undefined";
-    const CKEditorClassic = ref(null);
-
-    if (IsBrowser) {
-      import("@ckeditor/ckeditor5-build-classic").then(
-        (e) => (CKEditorClassic.value = e.default)
-      );
-    }
-
-    return { IsBrowser, CKEditorClassic };
-  },
   data() {
     return {
-      editorData: "<p>123123</p>",
-      editorConfig: {
-        extraPlugins: [this.uploader],
-      },
+      editor: ClassicEditor,
+      editorData: "",
+      editorConfig: {},
     };
   },
   mounted() {
     if (this.content) {
       this.editorData = this.content;
     }
-
-    console.log("Component mounted.");
   },
   methods: {
     emptyEditor() {
@@ -54,42 +50,6 @@ export default {
     inputListener() {
       return this.$emit("inputListener", this.editorData);
     },
-
-    sendEditorData() {
-      return this.$emit("editorData", this.editorData);
-    },
-
-    displayEditorResult() {
-      document.getElementById("resultingText").innerHTML = this.editorData;
-    },
-
-    uploader(editor) {
-      editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-        return new UploadAdapter(loader);
-      };
-    },
   },
-  // watch: {
-  //     editorData() {
-  //         this.editorData.$emit('changeEditor')
-  //     }
-  // }
 };
 </script>
-
-<template>
-  <ckeditor
-    v-model="editorData"
-    :editor="CKEditorClassic"
-    :config="editorConfig"
-    @input="inputListener"
-  />
-  <div class="mt-4">
-    <button class="btn btn-success me-3" @click="sendEditorData()">
-      Результат
-    </button>
-    <button class="btn btn-danger" @click="emptyEditor()">Очистить</button>
-  </div>
-
-  <div id="resultingText"></div>
-</template>

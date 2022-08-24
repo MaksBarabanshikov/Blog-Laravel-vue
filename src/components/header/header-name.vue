@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { AuthService } from "@/lib/services/auth.service";
-import { useQuery } from "vue-query/esm";
+import { useGetNameQuery } from "@/lib/services/auth.service";
 import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
-
-function useGetNameQuery() {
-  return useQuery("name", AuthService.getName);
-}
 
 const { isLoading, isError, error, data, isSuccess } = useGetNameQuery();
 </script>

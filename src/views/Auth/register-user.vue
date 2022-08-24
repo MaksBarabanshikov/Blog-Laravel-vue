@@ -1,52 +1,18 @@
 <script setup lang="ts">
 import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
-import { toFormValidator } from "@vee-validate/zod";
-import { object, string } from "zod";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/lib/stores/auth.store";
-import { useMutation } from "vue-query";
-import { ITokenResponse } from "@/types/api";
 import { IRegister } from "@/types/auth";
-import { AuthService } from "@/lib/services/auth.service";
+import { useRegisterUserMutation } from "@/lib/services/auth.service";
+import { validationRegister } from "@/helper/schemas";
 
-const router = useRouter();
-const authStore = useAuthStore();
-
-const validationSchema = toFormValidator(
-  object({
-    name: string().nonempty("Обязательное поле"),
-    email: string()
-      .nonempty("Обязательное поле")
-      .email({ message: "Некорректная почта" }),
-    password: string()
-      .nonempty("Обязательное поле")
-      .min(5, { message: "Не менее 5 символов" }),
-    password_confirmation: string().nonempty("Обязательное поле"),
-  }).refine((data) => data.password === data.password_confirmation, {
-    message: "Пароли не совпадают",
-    path: ["password_confirmation"],
-  })
-);
-
-const afterSuccessRegister = (data: ITokenResponse) => {
-  authStore.setToken(data.plainTextToken);
-  router.push({ name: "blog" });
-};
-
-const { isLoading, mutate, error, isError } = useMutation(
-  (credentials: IRegister) => AuthService.registerUser(credentials), // TODO поправить
-  {
-    onSuccess: (data: ITokenResponse) => afterSuccessRegister(data),
-  }
-);
+const { isLoading, mutate, error, isError } = useRegisterUserMutation();
 
 const onSubmit = (values: IRegister) => mutate(values);
 </script>
 
 <template>
   <div class="form-signin w-100 m-auto">
-    <Form :validation-schema="validationSchema" @submit="onSubmit">
+    <Form :validation-schema="validationRegister" @submit="onSubmit">
       <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
       <div class="form-floating">
         <Field
