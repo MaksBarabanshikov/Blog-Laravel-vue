@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { useLogoutAdminMutation } from "@/lib/services/auth.service";
+
+const { mutate } = useLogoutAdminMutation();
+</script>
+
 <template>
   <div class="admin">
     <header class="navbar navbar-dark bg-dark flex-md-nowrap pe-3">
@@ -19,9 +25,7 @@
       </button>
       <div class="navbar-nav">
         <div class="nav-item text-nowrap">
-          <a class="nav-link px-3 text-danger" @click.prevent="LOGOUT_ADMIN()"
-            >Выйти</a
-          >
+          <a class="nav-link px-3 text-danger" @click.prevent="mutate">Выйти</a>
         </div>
       </div>
     </header>

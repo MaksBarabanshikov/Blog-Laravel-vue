@@ -20,6 +20,12 @@ export function afterSuccessAdminLogin(data: ITokenResponse) {
   return router.push({ name: "AdminPanel" });
 }
 
+export function afterSuccessAdminLogout() {
+    const authStore = useAuthStore();
+    authStore.logoutAdmin()
+    return router.push({name: "blog"})
+}
+
 export function normalizeDate(createdAt: string) {
   const date = new Date(createdAt)
 

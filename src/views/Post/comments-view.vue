@@ -26,10 +26,11 @@ const {
 const { isLoading, isError, isSuccess, data, error } =
   useGetCommentsQuery(page);
 
-const onSubmit = (values: any) => {
+const onSubmit = (values: any, { resetForm }: any) => {
   const id = route.params.id;
   const text = values.text;
   mutate({ id, text });
+  resetForm();
 };
 </script>
 
@@ -46,7 +47,6 @@ const onSubmit = (values: any) => {
           name="text"
           rules="required"
           class="form-control"
-          placeholder="Leave a comment here"
           style="height: 100px"
         ></Field>
         <label for="floatingTextarea2">Оставьте комментарий</label>
