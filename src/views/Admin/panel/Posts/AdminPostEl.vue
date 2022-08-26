@@ -1,4 +1,16 @@
 <script setup lang="ts">
+interface Props {
+  id: number;
+  title: string;
+  preview: string;
+  thumbnail: string;
+  date: string;
+  comments: number;
+  typeBlock: string;
+}
+
+defineProps<Props>();
+
 import { useDeletePostAdminMutation } from "@/lib/services/admin/post.service";
 
 const { mutate } = useDeletePostAdminMutation();
@@ -56,30 +68,6 @@ const { mutate } = useDeletePostAdminMutation();
 <script lang="ts">
 export default {
   name: "AdminPostEl",
-  props: {
-    id: {
-      type: Number,
-    },
-    title: {
-      type: String,
-    },
-    preview: {
-      type: String,
-    },
-    thumbnail: {
-      type: String,
-    },
-    date: {
-      type: String,
-    },
-    comments: {
-      type: Number,
-      default: 0,
-    },
-    typeBlock: {
-      type: String,
-    },
-  },
 };
 </script>
 

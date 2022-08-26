@@ -10,8 +10,6 @@ const { isLoading, error, isError, isSuccess, data, mutate } =
   useGetPostsMutation();
 
 onMounted(() => mutate(1));
-
-// TODO доделать вывод постов и посмотреть типы
 </script>
 
 <template>

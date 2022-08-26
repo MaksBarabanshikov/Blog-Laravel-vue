@@ -1,3 +1,21 @@
+<script setup lang="ts">
+import MiniBlog from "@/views/Home/mini-blog.vue";
+
+interface Props {
+  posts: IMiniPost[];
+}
+
+interface IMiniPost {
+  id: number;
+  title: string;
+  preview: string;
+  thumbnail: string;
+  comments_count: number;
+}
+
+defineProps<Props>();
+</script>
+
 <template>
   <section>
     <div class="container">
@@ -16,18 +34,9 @@
   </section>
 </template>
 
-<script>
-import MiniBlog from "@/views/Home/mini-blog.vue";
+<script lang="ts">
 export default {
   name: "BlogsView",
-  components: { MiniBlog },
-  props: {
-    posts: {
-      type: Array,
-      required: true,
-      default: () => [],
-    },
-  },
 };
 </script>
 

@@ -5,6 +5,7 @@ import router from "@/lib/router";
 export function afterSuccessAuth(data: ITokenResponse) {
   const authStore = useAuthStore();
   authStore.setToken(data.plainTextToken);
+  authStore.logoutAdmin()
   return router.push({ name: "blog" });
 }
 
@@ -17,6 +18,7 @@ export function afterSuccessLogout() {
 export function afterSuccessAdminLogin(data: ITokenResponse) {
   const authStore = useAuthStore();
   authStore.setTokenAdmin(data.plainTextToken);
+  authStore.logout()
   return router.push({ name: "AdminPanel" });
 }
 
@@ -24,6 +26,10 @@ export function afterSuccessAdminLogout() {
     const authStore = useAuthStore();
     authStore.logoutAdmin()
     return router.push({name: "blog"})
+}
+
+export function afterSuccessCreatePost() {
+    return router.push({name: "AdminGetPosts"})
 }
 
 export function normalizeDate(createdAt: string) {

@@ -1,11 +1,9 @@
 import axios from "@/utils/axios";
-import { AxiosResponse } from "axios";
-import { IMostCommented } from "@/types/api";
 import { useQuery } from "vue-query";
 import { useMutation } from "vue-query/esm";
 
 export function useMostCommentedQuery() {
-  return useQuery<Promise<AxiosResponse<IMostCommented[]>>>(
+  return useQuery(
     "most-commented",
     async () => await axios.get(`/api/most-commented`)
   );

@@ -1,3 +1,18 @@
+<script setup lang="ts">
+interface Props {
+  post: IPost;
+}
+
+interface IPost {
+  id: number;
+  title: string;
+  preview: string;
+  comments_count: number;
+}
+
+defineProps<Props>();
+</script>
+
 <template>
   <section>
     <div class="container">
@@ -27,15 +42,9 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "BigBlog",
-  props: {
-    post: {
-      type: Object,
-      required: true,
-    },
-  },
 };
 </script>
 

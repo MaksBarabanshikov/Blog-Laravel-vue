@@ -2,7 +2,7 @@ import {useMutation, useQuery, useQueryClient} from "vue-query";
 import axios from "@/utils/axios";
 import { Ref } from "vue";
 import { useRoute } from "vue-router";
-import { useRouter } from "vue-router";
+import {afterSuccessCreatePost} from "@/helper/helper";
 
 export function useGetPostsAdminQuery(page: Ref) {
     const query = () => axios.get(`/admin/admin-posts?page=` + page.value)
@@ -18,7 +18,9 @@ export function useGetPostAdminQuery(id: string | string[]) {
 
 export function useCreatePostMutation() {
     const query = (newPost: any) => axios.post('/admin/admin-posts', {...newPost})
-    return useMutation('createPost', (newPost: any) => query(newPost))
+    return useMutation('createPost', (newPost: any) => query(newPost), {
+        onSuccess: () => afterSuccessCreatePost()
+    })
 }
 
 export function useDeletePostAdminMutation() {
@@ -31,12 +33,11 @@ export function useDeletePostAdminMutation() {
 
 export function useUpdatePostAdminMutation() {
     const route = useRoute()
-    const router = useRouter()
 
     const id = route.params.id
 
     const query = (newPost: any) => axios.put(`/admin/admin-posts/${id}`, {...newPost})
     return useMutation('updatePost', (newPost) => query(newPost),{
-        onSuccess: () => router.push({name: "AdminPanel"})
+        onSuccess: () => afterSuccessCreatePost()
     })
 }

@@ -1,3 +1,14 @@
+<script setup lang="ts">
+interface Props {
+  id: number;
+  title: string;
+  preview: string;
+  thumbnail: string;
+  comments_count: number;
+}
+
+defineProps<Props>();
+</script>
 <template>
   <div class="mini-blog col-md-6">
     <div
@@ -25,36 +36,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "MiniBlog",
-  props: {
-    id: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    title: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    preview: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    thumbnail: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    comments_count: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-  },
 };
 </script>
 

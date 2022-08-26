@@ -30,7 +30,7 @@ const onSubmit = (values: any, { resetForm }: any) => {
   const id = route.params.id;
   const text = values.text;
   mutate({ id, text });
-  resetForm();
+  return resetForm();
 };
 </script>
 
