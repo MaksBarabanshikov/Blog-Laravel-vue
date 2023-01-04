@@ -2,7 +2,7 @@
 import LoaderComp from "@/components/loader-comp.vue";
 import PostView from "@/views/Post/post-view.vue";
 import MessagePopup from "@/components/message-popup.vue";
-import { useGetCurrentPostQuery } from "@/lib/services/post.service";
+import { useGetCurrentPostQuery } from "@/services/post.service";
 import { useRoute } from "vue-router";
 
 const route = useRoute();

@@ -2,7 +2,7 @@
 import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
 import AdminUserEl from "@/views/Admin/panel/Users/AdminUserEl.vue";
-import { useGetUsersQuery } from "@/lib/services/admin/user.service";
+import { useGetUsersQuery } from "@/services/admin/user.service";
 import { normalizeDate } from "@/helper/helper";
 
 const { isLoading, isSuccess, isError, error, data } = useGetUsersQuery();

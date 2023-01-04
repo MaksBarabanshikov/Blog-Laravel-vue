@@ -3,7 +3,7 @@ import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
 import AdminPostEl from "@/views/Admin/panel/Posts/AdminPostEl.vue";
 import { ref } from "vue";
-import { useGetPostsAdminQuery } from "@/lib/services/admin/post.service";
+import { useGetPostsAdminQuery } from "@/services/admin/post.service";
 import PaginationComp from "@/components/pagination-comp.vue";
 
 const activeView = ref("tile");

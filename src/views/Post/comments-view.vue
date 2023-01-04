@@ -7,7 +7,7 @@ import { validateSendComment } from "@/helper/schemas";
 import {
   useGetCommentsQuery,
   useSendCommentMutation,
-} from "@/lib/services/comment.service";
+} from "@/services/comment.service";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useLogoutAdminMutation } from "@/lib/services/auth.service";
+import { useLogoutAdminMutation } from "@/services/auth.service";
 
 const { mutate } = useLogoutAdminMutation();
 </script>

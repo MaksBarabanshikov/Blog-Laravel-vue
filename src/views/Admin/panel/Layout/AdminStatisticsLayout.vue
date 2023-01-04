@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
-import { useGetStatisticsQuery } from "@/lib/services/admin/statistics.service";
+import { useGetStatisticsQuery } from "@/services/admin/statistics.service";
 
 const { isLoading, isError, isSuccess, data, error } = useGetStatisticsQuery();
 </script>

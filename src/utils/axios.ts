@@ -3,7 +3,7 @@ import { useAuthStore } from "@/lib/stores/auth.store";
 import router from "@/lib/router";
 
 const instance = axios.create({
-  baseURL: "http://example.localhost/",
+  baseURL: "http://laravel-blog.test/",
   headers: {
     "Content-Type": "application/json",
     "X-Requested-With": "XMLHttpRequest",

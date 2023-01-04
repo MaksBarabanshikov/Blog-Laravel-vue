@@ -3,7 +3,7 @@ import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
 import CreditorComp from "@/components/creditor-comp.vue";
 import { ref, watch } from "vue";
-import { useCreatePostMutation } from "@/lib/services/admin/post.service";
+import { useCreatePostMutation } from "@/services/admin/post.service";
 
 const { isLoading, isError, mutate, error } = useCreatePostMutation();
 

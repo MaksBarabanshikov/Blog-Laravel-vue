@@ -2,7 +2,7 @@
 import MessagePopup from "@/components/message-popup.vue";
 import LoaderComp from "@/components/loader-comp.vue";
 import { validationLogin } from "@/helper/schemas";
-import { useLoginAdminMutation } from "@/lib/services/auth.service";
+import { useLoginAdminMutation } from "@/services/auth.service";
 import { ILogin } from "@/types/auth";
 
 const { isLoading, isError, error, mutate } = useLoginAdminMutation();

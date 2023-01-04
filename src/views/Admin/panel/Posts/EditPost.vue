@@ -7,7 +7,7 @@ import { useRoute } from "vue-router";
 import {
   useGetPostAdminQuery,
   useUpdatePostAdminMutation,
-} from "@/lib/services/admin/post.service";
+} from "@/services/admin/post.service";
 
 const route = useRoute();
 

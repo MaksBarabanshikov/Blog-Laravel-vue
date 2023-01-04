@@ -2,7 +2,7 @@
 import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
 import { IRegister } from "@/types/auth";
-import { useRegisterUserMutation } from "@/lib/services/auth.service";
+import { useRegisterUserMutation } from "@/services/auth.service";
 import { validationRegister } from "@/helper/schemas";
 
 const { isLoading, mutate, error, isError } = useRegisterUserMutation();

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MessagePopup from "@/components/message-popup.vue";
-import { useDeleteUserMutation } from "@/lib/services/admin/user.service";
+import { useDeleteUserMutation } from "@/services/admin/user.service";
 
 const { isError, error, mutate } = useDeleteUserMutation();
 interface Props {

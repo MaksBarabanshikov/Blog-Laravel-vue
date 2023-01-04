@@ -3,7 +3,7 @@ import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
 import { validationLogin } from "@/helper/schemas";
 import { ILogin } from "@/types/auth";
-import { useLoginUserMutation } from "@/lib/services/auth.service";
+import { useLoginUserMutation } from "@/services/auth.service";
 
 const { isLoading, mutate, error, isError } = useLoginUserMutation();
 

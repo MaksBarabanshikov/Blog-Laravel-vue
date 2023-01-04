@@ -11,7 +11,7 @@ interface Props {
 
 defineProps<Props>();
 
-import { useDeletePostAdminMutation } from "@/lib/services/admin/post.service";
+import { useDeletePostAdminMutation } from "@/services/admin/post.service";
 
 const { mutate } = useDeletePostAdminMutation();
 </script>

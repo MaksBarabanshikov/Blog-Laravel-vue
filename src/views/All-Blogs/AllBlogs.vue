@@ -3,7 +3,7 @@ import BlogCard from "@/components/blog-card.vue";
 import MessagePopup from "@/components/message-popup.vue";
 import PaginationComp from "@/components/pagination-comp.vue";
 import LoaderComp from "@/components/loader-comp.vue";
-import { useGetPostsMutation } from "@/lib/services/post.service";
+import { useGetPostsMutation } from "@/services/post.service";
 import { onMounted } from "vue";
 
 const { isLoading, error, isError, isSuccess, data, mutate } =

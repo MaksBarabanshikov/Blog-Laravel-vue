@@ -2,7 +2,7 @@
 import CommentsView from "@/views/Post/comments-view.vue";
 import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
-import { useGetPostAdminQuery } from "@/lib/services/admin/post.service";
+import { useGetPostAdminQuery } from "@/services/admin/post.service";
 import { useRoute } from "vue-router";
 
 const router = useRoute();

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useGetNameQuery } from "@/lib/services/auth.service";
+import { useGetNameQuery } from "@/services/auth.service";
 import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
 

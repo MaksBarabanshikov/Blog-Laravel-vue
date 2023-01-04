@@ -3,7 +3,7 @@ import BlogsView from "./blogs-view.vue";
 import BigBlog from "./big-blog.vue";
 import LoaderComp from "@/components/loader-comp.vue";
 import MessagePopup from "@/components/message-popup.vue";
-import { useMostCommentedQuery } from "@/lib/services/post.service";
+import { useMostCommentedQuery } from "@/services/post.service";
 
 const { isLoading, isError, error, data, isSuccess } = useMostCommentedQuery();
 
