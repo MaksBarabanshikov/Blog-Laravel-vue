@@ -44,9 +44,8 @@ class PostController extends Controller
             $thumbnail = $request->get('thumbnail');
             $fileName  = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/',
                     explode(':', substr($thumbnail, 0, strpos($thumbnail, ';')))[1])[1];
-
             Image::make($thumbnail)->save(public_path('/storage/posts/') . $fileName);
-            $data['thumbnail'] = '/storage/posts/' . $fileName;
+            $data['thumbnail'] = env('APP_URL') . '/storage/posts/' . $fileName;
         }
 
         $post = Post::create($data);
